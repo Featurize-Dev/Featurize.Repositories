@@ -25,7 +25,7 @@ public class AddRepositoryProvider
 
         features.AddRepositoryProvider(options =>
         {
-            options.Repositories.Add<TestEntity, Guid>();
+            options.AddRepository<TestEntity, Guid>();
         });
 
         features.Count.Should().Be(1);
@@ -38,14 +38,12 @@ public class AddRepositoryProvider
         var provider = serviceCollection.BuildServiceProvider();
 
         var repository = provider.GetService<IRepository<TestEntity, Guid>>();
-        var repository1 = provider.GetService<IStateRepository<TestEntity, Guid>>();
+        var repository1 = provider.GetService<IEntityRepository<TestEntity, Guid>>();
         var repository2 = provider.GetService<IQueryableRepository<TestEntity, Guid>>();
-        var repository3 = provider.GetService<IBufferedRepository<TestEntity, Guid>>();
 
         repository.Should().NotBeNull();
         repository1.Should().NotBeNull();
         repository2.Should().NotBeNull();
-        repository3.Should().NotBeNull();
     }
 }
 

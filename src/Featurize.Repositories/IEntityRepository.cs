@@ -5,9 +5,14 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Featurize.Repositories;
-public interface IStateRepository<TEntity, TId> :
+
+/// <summary>
+/// Describes an Entity Repository
+/// </summary>
+/// <typeparam name="TEntity"></typeparam>
+/// <typeparam name="TId"></typeparam>
+public interface IEntityRepository<TEntity, TId> :
     IRepository<TEntity, TId>,
-    IBufferedRepository<TEntity, TId>,
     IQueryableRepository<TEntity, TId>
     
     where TEntity : class

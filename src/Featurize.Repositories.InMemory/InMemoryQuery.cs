@@ -1,12 +1,12 @@
 ﻿using System.Linq.Expressions;
 
-namespace Featurize.Repositories.DefaultProvider;
+namespace Featurize.Repositories.InMemory;
 
-internal sealed class DefaultQuery<TEntity> : IQuery<TEntity>, IQueryProvider
+internal sealed class InMemoryQuery<TEntity> : IQuery<TEntity>, IQueryProvider
 {
     private readonly IQueryable<TEntity> _queryable;
 
-    public DefaultQuery(IQueryable<TEntity> queryable)
+    public InMemoryQuery(IQueryable<TEntity> queryable)
     {
         _queryable = queryable;
     }
@@ -41,7 +41,9 @@ internal sealed class DefaultQuery<TEntity> : IQuery<TEntity>, IQueryProvider
         return _queryable.Provider.Execute<TResult>(expression);
     }
 
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
     public async IAsyncEnumerator<TEntity> GetAsyncEnumerator(CancellationToken cancellationToken = default)
+#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
     {
         foreach (var item in _queryable)
         {
@@ -51,16 +53,16 @@ internal sealed class DefaultQuery<TEntity> : IQuery<TEntity>, IQueryProvider
 
     public IQuery<TEntity> Skip(int count)
     {
-        return new DefaultQuery<TEntity>(_queryable.Skip(count));
+        return new InMemoryQuery<TEntity>(_queryable.Skip(count));
     }
 
     public IQuery<TEntity> Take(int count)
     {
-        return new DefaultQuery<TEntity>(_queryable.Take(count));
+        return new InMemoryQuery<TEntity>(_queryable.Take(count));
     }
 
     public IQuery<TEntity> Where(Expression<Func<TEntity, bool>> predicate)
     {
-        return new DefaultQuery<TEntity>(_queryable.Where(predicate));
+        return new InMemoryQuery<TEntity>(_queryable.Where(predicate));
     }
 }

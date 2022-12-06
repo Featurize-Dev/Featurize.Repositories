@@ -6,7 +6,13 @@ internal sealed class RepositoryProviderFeature :
     IFeatureWithOptions<RepositoryProviderFeature, RepositoryProviderOptions>,
     IServiceCollectionFeature
 {
-    private RepositoryProviderFeature(RepositoryProviderOptions options) => Options = options;
+    private RepositoryProviderFeature(RepositoryProviderOptions options)
+    {
+        Options = options;
+        Name = options.Provider.GetType().Name;
+    }
+
+    public string Name { get; init; }
 
     public RepositoryProviderOptions Options { get; }
 
@@ -17,15 +23,10 @@ internal sealed class RepositoryProviderFeature :
 
     public void Configure(IServiceCollection services)
     {
-        foreach (var item in Options.Repositories)
+        Options.Provider.ConfigureProvider(services);
+        foreach (var info in Options.Repositories)
         {
-            var implementationType = Options.Provider.MakeImplementationType(item.EntityType, item.IdType);
-            var serviceTypes = Options.Provider.MakeServiceTypes(item.EntityType, item.IdType);
-
-            foreach (var serviceType in serviceTypes)
-            {
-                services.AddScoped(serviceType, implementationType);
-            }   
+            Options.Provider.ConfigureRepository(services, info);
         }
     }
 }

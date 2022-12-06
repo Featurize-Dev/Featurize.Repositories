@@ -1,20 +1,15 @@
-﻿namespace Featurize.Repositories.DefaultProvider;
+﻿using Microsoft.Extensions.DependencyInjection;
 
-public class DefaultRepositoryProvider : IRepositoryProvider
+namespace Featurize.Repositories.DefaultProvider;
+internal class DefaultRepositoryProvider : IRepositoryProvider
 {
-    public Type[] MakeServiceTypes(Type entityType, Type idType)
+    public void ConfigureProvider(IServiceCollection services)
     {
-        return new[]
-        {
-            typeof(IRepository<,>).MakeGenericType(entityType, idType),
-            typeof(IStateRepository<,>).MakeGenericType(entityType, idType),
-            typeof(IQueryableRepository<,>).MakeGenericType(entityType, idType),
-            typeof(IBufferedRepository<,>).MakeGenericType(entityType, idType),
-        };   
+        
     }
 
-    public Type MakeImplementationType(Type wntityType, Type idType)
+    public void ConfigureRepository(IServiceCollection services, RepositoryInfo info)
     {
-        return typeof(DefaultRepository<,>).MakeGenericType(wntityType, idType);
+        
     }
 }

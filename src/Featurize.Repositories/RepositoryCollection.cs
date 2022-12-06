@@ -2,10 +2,10 @@
 
 namespace Featurize.Repositories;
 
-public sealed class RepositoryCollection : IRepositoryCollection
+internal sealed class RepositoryCollection : IRepositoryCollection
 {
     private readonly HashSet<RepositoryInfo> _items = new();
-    public int Count => _items.Count();
+    public int Count => _items.Count;
 
     public void Add(RepositoryInfo repositoryInfo)
     {
