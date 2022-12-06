@@ -10,6 +10,7 @@ internal class DefaultRepositoryProvider : IRepositoryProvider
 
     public void ConfigureRepository(IServiceCollection services, RepositoryInfo info)
     {
-        
+        var serviceType = typeof(IEntityRepository<,>).MakeGenericType(info.EntityType, info.IdType);
+        services.AddTransient(serviceType, c => throw new ArgumentException("No Provider Configured."));
     }
 }

@@ -37,13 +37,7 @@ public class AddRepositoryProvider
 
         var provider = serviceCollection.BuildServiceProvider();
 
-        var repository = provider.GetService<IRepository<TestEntity, Guid>>();
-        var repository1 = provider.GetService<IEntityRepository<TestEntity, Guid>>();
-        var repository2 = provider.GetService<IQueryableRepository<TestEntity, Guid>>();
-
-        repository.Should().NotBeNull();
-        repository1.Should().NotBeNull();
-        repository2.Should().NotBeNull();
+        Assert.Throws<ArgumentException>(() => provider.GetService<IEntityRepository<TestEntity, Guid>>());
     }
 }
 

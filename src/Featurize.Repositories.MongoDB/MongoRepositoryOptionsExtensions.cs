@@ -3,6 +3,13 @@
 public static class MongoRepositoryOptionsExtensions
 {
 
+    public static RepositoryProviderOptions UseMongo(this RepositoryProviderOptions options, string connectionString)
+    {
+        options.Provider = new MongoRepositoryProvider(connectionString);
+        return options;
+    }
+
+
     public static RepositoryOptions Database(this RepositoryOptions options, string value)
     {
         options.Set(nameof(Database), value);

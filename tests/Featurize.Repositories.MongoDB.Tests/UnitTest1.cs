@@ -18,7 +18,7 @@ public class Tests
 
         featureCollection.AddRepositoryProvider(options =>
         {
-            options.Provider = new MongoRepositoryProvider("mongodb://username:password@localhost:27017");
+            options.UseMongo("mongodb://username:password@localhost:27017");
             options.AddRepository<Entity, Guid>(o => {
                 o.Database("Test");
                 o.CollectionName("TestCollection");
