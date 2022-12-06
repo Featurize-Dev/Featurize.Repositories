@@ -22,7 +22,7 @@ public sealed class DefaultRepositoryProvider : IRepositoryProvider
     /// </summary>
     /// <param name="services">The service collection <see cref="IServiceCollection"/>.</param>
     /// <param name="info">The <see cref="RepositoryInfo"/>.</param>
-/    public void ConfigureRepository(IServiceCollection services, RepositoryInfo info)
+    public void ConfigureRepository(IServiceCollection services, RepositoryInfo info)
     {
         var serviceType = typeof(IEntityRepository<,>).MakeGenericType(info.EntityType, info.IdType);
         services.AddTransient(serviceType, c => throw new ArgumentException("No Provider Configured."));

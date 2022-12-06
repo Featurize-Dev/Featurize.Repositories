@@ -21,8 +21,8 @@ public static class MongoRepositoryOptionsExtensions
         return options;
     }
 
-    internal static string GetDatabase(this RepositoryOptions options)
+    public static string GetDatabase(this RepositoryOptions options)
         => options.Get(nameof(Database));
-    internal static string GetCollectionName(this RepositoryOptions options)
+    public static string GetCollectionName(this RepositoryOptions options)
         => options.Get(nameof(CollectionName));
 }

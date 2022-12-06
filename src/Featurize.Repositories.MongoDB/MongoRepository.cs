@@ -11,7 +11,7 @@ public sealed class MongoEntityRepository<TEntity, TId> : IEntityRepository<TEnt
     {
         _collection = collection;
     }
-
+    public IMongoCollection<TEntity> Collection { get { return _collection; } }
     public IQuery<TEntity> Query => new MongoQuery<TEntity>(_collection.AsQueryable());
 
     public async ValueTask DeleteAsync(TId id)
