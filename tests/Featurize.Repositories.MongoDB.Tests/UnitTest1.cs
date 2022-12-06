@@ -1,13 +1,17 @@
 using Microsoft.Extensions.DependencyInjection;
+using Mongo2Go;
 using MongoDB.Driver.Core.Misc;
 
 namespace Featurize.Repositories.MongoDB.Tests;
 
 public class Tests
 {
+    internal static MongoDbRunner _runner;
+
     [SetUp]
     public void Setup()
     {
+        _runner = MongoDbRunner.Start();
     }
 
     [Test]
@@ -18,7 +22,7 @@ public class Tests
 
         featureCollection.AddRepositoryProvider(options =>
         {
-            options.UseMongo("mongodb://username:password@localhost:27017");
+            options.UseMongo(_runner.ConnectionString);
             options.AddRepository<Entity, Guid>(o => {
                 o.Database("Test");
                 o.CollectionName("TestCollection");
