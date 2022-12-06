@@ -1,7 +1,7 @@
 ﻿using MongoDB.Driver;
 
 namespace Featurize.Repositories.MongoDB;
-public class MongoEntityRepository<TEntity, TId> : IEntityRepository<TEntity, TId>
+public sealed class MongoEntityRepository<TEntity, TId> : IEntityRepository<TEntity, TId>
     where TEntity : class, IIdentifiable<TEntity, TId>
     where TId : struct
 {

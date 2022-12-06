@@ -5,7 +5,7 @@
 /// </summary>
 /// <typeparam name="TEntity">The type of the Entity</typeparam>
 /// <typeparam name="TId">The type of the Id.</typeparam>
-public class InMemoryRepository<TEntity, TId> : IEntityRepository<TEntity, TId>
+public sealed class InMemoryRepository<TEntity, TId> : IEntityRepository<TEntity, TId>
     where TEntity : class, IIdentifiable<TEntity, TId>
     where TId : struct
 {

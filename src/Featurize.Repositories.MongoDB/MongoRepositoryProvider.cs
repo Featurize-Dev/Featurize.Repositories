@@ -2,7 +2,7 @@
 using MongoDB.Driver;
 
 namespace Featurize.Repositories.MongoDB;
-public class MongoRepositoryProvider : IRepositoryProvider
+public sealed class MongoRepositoryProvider : IRepositoryProvider
 {
 	public MongoRepositoryProvider(string connectionString)
 	{

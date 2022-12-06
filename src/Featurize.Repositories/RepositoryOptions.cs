@@ -3,7 +3,7 @@
 /// <summary>
 /// Generic options collection
 /// </summary>
-public class RepositoryOptions
+public sealed class RepositoryOptions
 {
     private readonly Dictionary<string, string> _items = new();
 

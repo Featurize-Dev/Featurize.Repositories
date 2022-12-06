@@ -2,7 +2,7 @@
 using System.Linq.Expressions;
 
 namespace Featurize.Repositories.MongoDB;
-internal class MongoQuery<TState> : IQuery<TState>, IQueryProvider
+internal sealed class MongoQuery<TState> : IQuery<TState>, IQueryProvider
 {
     private readonly IMongoQueryable<TState> _queryable;
 

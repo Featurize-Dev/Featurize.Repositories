@@ -5,7 +5,7 @@ namespace Featurize.Repositories.InMemory;
 /// <summary>
 /// Default provider for providing default in memory repositories.
 /// </summary>
-public class InMemoryRepositoryProvider : IRepositoryProvider
+public sealed class InMemoryRepositoryProvider : IRepositoryProvider
 {
     /// <summary>
     /// Registerd the services required by this provider.
