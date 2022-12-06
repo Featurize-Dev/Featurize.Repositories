@@ -1,6 +1,4 @@
-﻿using System.Security.Cryptography;
-
-namespace Featurize.Repositories;
+﻿namespace Featurize.Repositories;
 
 /// <summary>
 /// Type that hold the repository data.

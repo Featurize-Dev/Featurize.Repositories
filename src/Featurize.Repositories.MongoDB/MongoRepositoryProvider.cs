@@ -1,7 +1,5 @@
-﻿using Featurize.Repositories.DefaultProvider;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Driver;
-using System.Runtime.CompilerServices;
 
 namespace Featurize.Repositories.MongoDB;
 public class MongoRepositoryProvider : IRepositoryProvider
