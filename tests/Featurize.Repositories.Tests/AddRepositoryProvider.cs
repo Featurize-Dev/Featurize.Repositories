@@ -11,7 +11,6 @@ public class AddRepositoryProvider
 
         features.AddRepositoryProvider(options =>
         {
-            
         });
 
         features.Count.Should().Be(1);
