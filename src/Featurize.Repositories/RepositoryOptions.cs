@@ -1,41 +1,29 @@
-﻿using System.Collections;
-
-namespace Featurize.Repositories;
+﻿namespace Featurize.Repositories;
 
 /// <summary>
 /// Generic options collection
 /// </summary>
-public sealed class RepositoryOptions : IEnumerable<KeyValuePair<string, string>>
+public class RepositoryOptions : Dictionary<string, string>
 {
-    private readonly Dictionary<string, string> _items = new();
-
     /// <summary>
-    /// Set additional options for a repository.
+    /// Sets the name of the <see cref="IRepositoryProvider" /> registerd in the <see cref="ProviderCollection"/>
     /// </summary>
-    /// <param name="key">The key of the setting.</param>
-    /// <param name="value">The value of the setting.</param>
-    public void Set(string key, string value)
+    /// <param name="name">Name if the provider</param>
+    public void Provider(string name)
     {
-        _items[key] = value;
+        this[nameof(Provider)] = name;
     }
 
     /// <summary>
-    /// Get additional option for a repository
+    /// Gets the name of the provider to use to create this repository.
     /// </summary>
-    /// <param name="key"></param>
-    /// <returns>Returns the value </returns>
-    public string Get(string key) { 
-        return _items[key]; 
+    /// <returns></returns>
+    public string GetProviderName()
+    {
+        if(TryGetValue(nameof(Provider), out string? value)) {
+            return value;
+        }
+
+        return string.Empty;
     }
-
-    /// <summary>
-    /// Returns an enumerator that iterates through the collection.
-    /// </summary>
-    /// <returns>
-    /// An enumerator that can be used to iterate through the collection.
-    /// </returns>
-    public IEnumerator<KeyValuePair<string, string>> GetEnumerator() 
-        => _items.GetEnumerator();
-
-    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 }

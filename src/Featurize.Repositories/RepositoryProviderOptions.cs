@@ -1,4 +1,5 @@
 ﻿using Featurize.Repositories.DefaultProvider;
+using System.ComponentModel.DataAnnotations;
 
 namespace Featurize.Repositories;
 
@@ -8,12 +9,34 @@ namespace Featurize.Repositories;
 public sealed class RepositoryProviderOptions
 {
     /// <summary>
+    /// 
+    /// </summary>
+    public IProviderCollection Providers { get; } = new ProviderCollection()
+    {
+        new DefaultRepositoryProvider()
+    };
+    /// <summary>
     /// Collection that holds the registered repositories.
     /// </summary>
     public IRepositoryCollection Repositories { get; } = new RepositoryCollection();
+    
+    public void AddProvider(IRepositoryProvider provider)
+    {
+        Providers.Add(provider);
+    }
 
     /// <summary>
-    /// The Provider that will create the repositories.
+    /// Adds a entity to use this provider
     /// </summary>
-    public IRepositoryProvider Provider { get; set; } = new DefaultRepositoryProvider();
+    /// <typeparam name="TEntity">a <see cref="IIdentifiable{TEntity, TId}"/> entory.</typeparam>
+    /// <typeparam name="TId">The type of the id of this entity</typeparam>
+    public void AddRepository<TEntity, TId>(Action<RepositoryOptions>? options = null)
+        where TEntity : class, IIdentifiable<TEntity, TId>
+        where TId: struct
+    {
+        var o = new RepositoryOptions();
+        options?.Invoke(o);
+        Repositories.Add<TEntity, TId>(o);
+    }
 }
+

@@ -9,7 +9,7 @@ public class AddRepositoryProvider
     {
         var features = new FeatureCollection();
 
-        features.AddRepositoryProvider(options =>
+        features.AddRepositories(options =>
         {
         });
 
@@ -22,8 +22,9 @@ public class AddRepositoryProvider
         var features = new FeatureCollection();
         var serviceCollection = new ServiceCollection();
 
-        features.AddRepositoryProvider(options =>
+        features.AddRepositories(options =>
         {
+            options.AddProvider(new TestRepositoryProvider());
             options.AddRepository<TestEntity, Guid>();
         });
 
@@ -35,8 +36,33 @@ public class AddRepositoryProvider
         }
 
         var provider = serviceCollection.BuildServiceProvider();
+    }
 
-        Assert.Throws<ArgumentException>(() => provider.GetService<IEntityRepository<TestEntity, Guid>>());
+    [Test]
+    public void with_added_with_named_repository_should_register_repository()
+    {
+        var features = new FeatureCollection();
+        var serviceCollection = new ServiceCollection();
+        var providerName = Guid.NewGuid().ToString();
+
+        features.AddRepositories(options =>
+        {
+            options.AddProvider(new TestRepositoryProvider());
+            options.AddProvider(new TestRepositoryProvider(providerName));
+            options.AddRepository<TestEntity, Guid>();
+            options.AddRepository<TestEntity2, Guid>(x => x.Provider(providerName));
+        });
+
+        features.Count.Should().Be(1);
+
+        foreach (var feature in features.GetServiceCollectionFeatures())
+        {
+            feature.Configure(serviceCollection);
+        }
+
+        var provider = serviceCollection.BuildServiceProvider();
+
+
     }
 }
 
@@ -45,6 +71,16 @@ public class TestEntity : IIdentifiable<TestEntity, Guid>
     public Guid Id { get; set; }
 
     public static Guid Identify(TestEntity entity)
+    {
+        return entity.Id;
+    }
+}
+
+public class TestEntity2 : IIdentifiable<TestEntity2, Guid>
+{
+    public Guid Id { get; set; }
+
+    public static Guid Identify(TestEntity2 entity)
     {
         return entity.Id;
     }

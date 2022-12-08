@@ -8,6 +8,16 @@ namespace Featurize.Repositories;
 public interface IRepositoryProvider
 {
     /// <summary>
+    /// 
+    /// </summary>
+    string Name { get; }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    bool IsConfigured { get; }
+
+    /// <summary>
     /// Configures services required for this provider.
     /// </summary>
     /// <param name="services">The service collection <see cref="IServiceCollection"/>.</param>

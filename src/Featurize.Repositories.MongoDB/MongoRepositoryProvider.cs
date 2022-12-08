@@ -4,12 +4,20 @@ using MongoDB.Driver;
 namespace Featurize.Repositories.MongoDB;
 public sealed class MongoRepositoryProvider : IRepositoryProvider
 {
-	public MongoRepositoryProvider(string connectionString)
+    public MongoRepositoryProvider(string connectionString) 
+        : this(connectionString, DefaultName) { }
+
+    public MongoRepositoryProvider(string connectionString, string name)
 	{
+        Name = name;
         ConnectionString = connectionString;
     }
 
+    public static string DefaultName => "MongoDB";
+
     public string ConnectionString { get; }
+    public string Name { get; }
+    public bool IsConfigured { get; }
 
     public void ConfigureProvider(IServiceCollection services)
     {

@@ -11,12 +11,14 @@ public class RepositoryProviderOptions_Tests
         {
             var options = new RepositoryProviderOptions();
 
+
+            options.Providers.Count().Should().Be(1);
+            options.Providers.Should().BeOfType<ProviderCollection>();
+            options.Providers.First().Should().BeOfType<DefaultRepositoryProvider>();
+
             options.Repositories.Should().NotBeNull();
             options.Repositories.Should().BeOfType<RepositoryCollection>();
             options.Repositories.Count().Should().Be(0);
-            
-            options.Provider.Should().NotBeNull();
-            options.Provider.Should().BeOfType<DefaultRepositoryProvider>();
         }
     }
 
@@ -31,7 +33,7 @@ public class RepositoryProviderOptions_Tests
 
 public class TestRepositoryCollection : IRepositoryCollection
 {
-    private List<RepositoryInfo> _repositoryInfos = new();
+    private readonly List<RepositoryInfo> _repositoryInfos = new();
 
     public bool AddCalled { get; set; }
 

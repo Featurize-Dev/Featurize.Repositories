@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Featurize.Repositories.DefaultProvider;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Featurize.Repositories;
 
@@ -12,13 +13,7 @@ public sealed class RepositoryProviderFeature :
     private RepositoryProviderFeature(RepositoryProviderOptions options)
     {
         Options = options;
-        Name = options.Provider.GetType().Name;
     }
-
-    /// <summary>
-    /// Name of the provider
-    /// </summary>
-    public string Name { get; init; }
 
     /// <summary>
     /// The <see cref="RepositoryProviderOptions"/> used to configure this instance.
@@ -41,10 +36,27 @@ public sealed class RepositoryProviderFeature :
     /// <param name="services"></param>
     public void Configure(IServiceCollection services)
     {
-        Options.Provider.ConfigureProvider(services);
+        //Options.Provider.ConfigureProvider(services);
         foreach (var info in Options.Repositories)
         {
-            Options.Provider.ConfigureRepository(services, info);
+            var providerName = info.Options.GetProviderName();
+
+            if(string.IsNullOrEmpty(providerName))
+            {
+                providerName = DefaultRepositoryProvider.DefaultName;
+            }
+
+            var provider = Options.Providers.Get(providerName);
+                        
+            if (provider == null)
+                throw new Exception($"No provider registerd with name: '{providerName}'.");
+
+            if(!provider!.IsConfigured)
+            {
+                provider.ConfigureProvider(services);
+            }
+            
+            provider.ConfigureRepository(services, info);
         }
     }
 }
