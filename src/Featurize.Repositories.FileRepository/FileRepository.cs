@@ -3,24 +3,21 @@
 public class FileRepository<TEntity> : IFileRepository<TEntity>
     where TEntity : class, IIdentifiable<TEntity, Filename>, new()
 {
-    public FileRepository(IFileSerializer serializer, IFileDeserializer deserializer, string path)
+    public FileRepository(IFileSerializer serializer, string path)
     {
         ArgumentNullException.ThrowIfNull(serializer);
-        ArgumentNullException.ThrowIfNull(deserializer);
         ArgumentNullException.ThrowIfNull(path);
 
         Serializer = serializer;
-        Deserializer = deserializer;
         BaseDirectory = Path.Combine(path, typeof(TEntity).Name.ToLower());
         DeletedDirectory = Path.Combine(BaseDirectory, "deleted");
     }
 
     public IFileSerializer Serializer { get; }
-    public IFileDeserializer Deserializer { get; }
     public string BaseDirectory { get; }
     public string DeletedDirectory { get; }
 
-    public IQuery<TEntity> Query => new DirectoryQueryable<TEntity>(Deserializer, Directory.EnumerateFiles(BaseDirectory));
+    public IQuery<TEntity> Query => new DirectoryQueryable<TEntity>(Serializer, Directory.EnumerateFiles(BaseDirectory));
 
     public ValueTask DeleteAsync(Filename id)
     {
@@ -48,7 +45,7 @@ public class FileRepository<TEntity> : IFileRepository<TEntity>
         }
 
         var result = await File.ReadAllTextAsync(filename);
-        var item = Deserializer.Deserialize<TEntity?>(result);
+        var item = Serializer.Deserialize<TEntity?>(result);
 
         return item;
     }
@@ -75,15 +72,4 @@ public class FileRepository<TEntity> : IFileRepository<TEntity>
         Directory.CreateDirectory(BaseDirectory);
         Directory.CreateDirectory(DeletedDirectory);
     }
-}
-
-
-public interface IFileSerializer
-{
-    string Serialize<T>(T entity);
-}
-
-public interface IFileDeserializer
-{
-    T Deserialize<T>(string value);
 }

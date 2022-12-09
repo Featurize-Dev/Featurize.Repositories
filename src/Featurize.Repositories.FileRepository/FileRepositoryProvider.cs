@@ -1,35 +1,22 @@
-﻿using YamlDotNet.Serialization.NamingConventions;
-using YamlDotNet.Serialization;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 
 namespace Featurize.Repositories.FileRepository;
 
 public class FileRepositoryProvider : IRepositoryProvider
 {
-    public FileRepositoryProvider()
+    public FileRepositoryProvider(IFileSerializer serializer)
     {
+        Serializer = serializer;
     }
 
-    public string Name => "Yaml";
+    public string Name => Serializer.ProviderName;
 
     public bool IsConfigured { get; private set; }
+    public IFileSerializer Serializer { get; }
 
     public void ConfigureProvider(IServiceCollection services)
     {
-        //services.AddScoped(x => new SerializerBuilder()
-        //    .WithNamingConvention(CamelCaseNamingConvention.Instance)
-        //    .WithTypeInspector(x => new SortedTypeInspector(x))
-        //    .ConfigureDefaultValuesHandling(
-        //        DefaultValuesHandling.OmitNull |
-        //        DefaultValuesHandling.OmitDefaults |
-        //        DefaultValuesHandling.OmitEmptyCollections)
-        //    .Build());
-
-        //services.AddScoped(x => new DeserializerBuilder()
-        //       .WithNamingConvention(CamelCaseNamingConvention.Instance)
-        //       .WithTypeInspector(x => new SortedTypeInspector(x))
-        //       .Build());
-
+        services.AddSingleton<IFileSerializer>(Serializer);
         IsConfigured = true;
     }
 
@@ -48,9 +35,8 @@ public class FileRepositoryProvider : IRepositoryProvider
     {
         return sp =>
         {
-            var serializer = sp.GetRequiredService<ISerializer>();
-            var deserialilzer = sp.GetRequiredService<IDeserializer>();
-            return Activator.CreateInstance(implType, serializer, deserialilzer, directory)!;
+            var serializer = sp.GetRequiredService<IFileSerializer>();
+            return Activator.CreateInstance(implType, serializer, directory)!;
         };
     }
 

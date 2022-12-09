@@ -1,16 +1,15 @@
 ﻿using System.Linq.Expressions;
-using YamlDotNet.Serialization;
 
 namespace Featurize.Repositories.FileRepository;
 
 public class DirectoryQueryable<TEntity> : IQuery<TEntity>
 {
-    private readonly IDeserializer _deserializer;
+    private readonly IFileSerializer _serializer;
     private readonly IEnumerable<string> _files;
 
-    public DirectoryQueryable(IDeserializer _deserializer, IEnumerable<string> files)
+    public DirectoryQueryable(IFileSerializer _serializer, IEnumerable<string> files)
     {
-        this._deserializer = _deserializer;
+        this._serializer = _serializer;
         _files = files;
     }
 
@@ -35,20 +34,20 @@ public class DirectoryQueryable<TEntity> : IQuery<TEntity>
                 break;
             }
             var content = File.ReadAllText(file);
-            yield return _deserializer.Deserialize<TEntity>(content);
+            yield return _serializer.Deserialize<TEntity>(content);
         }
     }
 
     public IQuery<TEntity> Skip(int count)
     {
         var files = _files.Skip(count).AsEnumerable();
-        return new DirectoryQueryable<TEntity>(_deserializer, files);
+        return new DirectoryQueryable<TEntity>(_serializer, files);
     }
 
     public IQuery<TEntity> Take(int count)
     {
         var files = _files.Take(count).AsEnumerable();
-        return new DirectoryQueryable<TEntity>(_deserializer, files);
+        return new DirectoryQueryable<TEntity>(_serializer, files);
     }
 
     public IQuery<TEntity> Where(Expression<Func<TEntity, bool>> predicate)
@@ -57,13 +56,13 @@ public class DirectoryQueryable<TEntity> : IQuery<TEntity>
         foreach (var file in _files)
         {
             var content = File.ReadAllText(file);
-            var entity = _deserializer.Deserialize<TEntity>(content);
+            var entity = _serializer.Deserialize<TEntity>(content);
             if (predicate.Compile().Invoke(entity))
             {
                 _matches.Add(file);
             }
         }
 
-        return new DirectoryQueryable<TEntity>(_deserializer, _matches.AsEnumerable());
+        return new DirectoryQueryable<TEntity>(_serializer, _matches.AsEnumerable());
     }
 }
