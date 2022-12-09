@@ -11,6 +11,8 @@ public class FileRepository<TEntity> : IFileRepository<TEntity>
         Serializer = serializer;
         BaseDirectory = Path.Combine(path, typeof(TEntity).Name.ToLower());
         DeletedDirectory = Path.Combine(BaseDirectory, "deleted");
+
+        CreateDirectories();
     }
 
     public IFileSerializer Serializer { get; }
@@ -23,8 +25,6 @@ public class FileRepository<TEntity> : IFileRepository<TEntity>
     {
         ArgumentNullException.ThrowIfNull(id);
 
-        CreateDirectories();
-
         File.Move(CreateFilename(id), Path.Combine(DeletedDirectory, id.ToString()));
         File.Delete(CreateFilename(id));
 
@@ -34,8 +34,6 @@ public class FileRepository<TEntity> : IFileRepository<TEntity>
     public async ValueTask<TEntity?> FindByIdAsync(Filename id)
     {
         ArgumentNullException.ThrowIfNull(id);
-
-        CreateDirectories();
 
         var filename = CreateFilename(id);
 
@@ -53,8 +51,6 @@ public class FileRepository<TEntity> : IFileRepository<TEntity>
     public async ValueTask SaveAsync(TEntity entity)
     {
         ArgumentNullException.ThrowIfNull(entity);
-
-        CreateDirectories();
 
         var item = Serializer.Serialize(entity);
         var id = TEntity.Identify(entity);

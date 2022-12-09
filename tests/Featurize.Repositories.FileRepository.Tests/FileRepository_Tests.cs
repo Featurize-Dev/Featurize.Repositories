@@ -38,7 +38,6 @@ public class FileRepository_Tests
         public async Task should_remove_file_from_directory()
         {
             var directory = Environment.GetFolderPath(_folder);
-            Directory.CreateDirectory(directory);
             var repo = new FileRepository<TestEntity>(YamlWrapper.Create(), directory);
             
             var filename = Filename.Create($"{Guid.NewGuid()}.yaml");
