@@ -37,6 +37,7 @@ public class YamlWrapper : IFileSerializer
 
     public string Serialize<T>(T entity)
     {
+        ArgumentNullException.ThrowIfNull(entity, nameof(entity));
         return _serializer.Serialize(entity);
     }
 }

@@ -1,8 +1,19 @@
 ﻿namespace Featurize.Repositories.FileRepository;
 
+/// <summary>
+/// A Repository for serializing files in a directory
+/// </summary>
+/// <typeparam name="TEntity">The type of the entity.</typeparam>
+/// <seealso cref="Featurize.Repositories.FileRepository.IFileRepository&lt;TEntity&gt;" />
 public class FileRepository<TEntity> : IFileRepository<TEntity>
     where TEntity : class, IIdentifiable<TEntity, Filename>, new()
 {
+    /// <summary>
+    /// Initializes a new instance of the <see cref="FileRepository{TEntity}"/> class.
+    /// </summary>
+    /// <param name="serializer">The serializer.</param>
+    /// <param name="path">The path.</param>
+    /// <exception cref="System.ArgumentNullException"></exception>
     public FileRepository(IFileSerializer serializer, string path)
     {
         ArgumentNullException.ThrowIfNull(serializer);
@@ -15,12 +26,42 @@ public class FileRepository<TEntity> : IFileRepository<TEntity>
         CreateDirectories();
     }
 
+    /// <summary>
+    /// Gets the serializer.
+    /// </summary>
+    /// <value>
+    /// The serializer.
+    /// </value>
     public IFileSerializer Serializer { get; }
+    /// <summary>
+    /// Gets the base directory.
+    /// </summary>
+    /// <value>
+    /// The base directory.
+    /// </value>
     public string BaseDirectory { get; }
+    /// <summary>
+    /// Gets the deleted directory.
+    /// </summary>
+    /// <value>
+    /// The deleted directory.
+    /// </value>
     public string DeletedDirectory { get; }
 
+    /// <summary>
+    /// Gets the query.
+    /// </summary>
+    /// <value>
+    /// The query.
+    /// </value>
     public IQuery<TEntity> Query => new DirectoryQueryable<TEntity>(Serializer, Directory.EnumerateFiles(BaseDirectory));
 
+    /// <summary>
+    /// Removes a entity from the underlying storage.
+    /// </summary>
+    /// <param name="id">Id of the entity to remove</param>
+    /// <returns></returns>
+    /// <exception cref="System.ArgumentNullException"></exception>
     public ValueTask DeleteAsync(Filename id)
     {
         ArgumentNullException.ThrowIfNull(id);
@@ -30,7 +71,12 @@ public class FileRepository<TEntity> : IFileRepository<TEntity>
 
         return ValueTask.CompletedTask;
     }
-
+    /// <summary>
+    /// Finds the by identifier asynchronous.
+    /// </summary>
+    /// <param name="id">The identifier.</param>
+    /// <returns></returns>
+    /// <exception cref="System.ArgumentNullException"></exception>
     public async ValueTask<TEntity?> FindByIdAsync(Filename id)
     {
         ArgumentNullException.ThrowIfNull(id);
@@ -48,6 +94,12 @@ public class FileRepository<TEntity> : IFileRepository<TEntity>
         return item;
     }
 
+    /// <summary>
+    /// Saves the entity in the underlying storage.
+    /// </summary>
+    /// <param name="entity">The entity to save.</param>
+    /// <returns></returns>
+    /// <exception cref="System.ArgumentNullException"></exception>
     public async ValueTask SaveAsync(TEntity entity)
     {
         ArgumentNullException.ThrowIfNull(entity);

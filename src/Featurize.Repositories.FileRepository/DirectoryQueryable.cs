@@ -1,8 +1,15 @@
-﻿using System.Linq.Expressions;
+﻿using System.Collections.Generic;
+using System;
+using System.Linq.Expressions;
 
 namespace Featurize.Repositories.FileRepository;
 
-public class DirectoryQueryable<TEntity> : IQuery<TEntity>
+/// <summary>
+/// A IQuery for entities in directory
+/// </summary>
+/// <typeparam name="TEntity">The type of the entity.</typeparam>
+/// <seealso cref="Featurize.Repositories.IQuery&lt;TEntity&gt;" />
+internal class DirectoryQueryable<TEntity> : IQuery<TEntity>
 {
     private readonly IFileSerializer _serializer;
     private readonly IEnumerable<string> _files;
@@ -33,7 +40,7 @@ public class DirectoryQueryable<TEntity> : IQuery<TEntity>
             {
                 break;
             }
-            var content = File.ReadAllText(file);
+            var content = await File.ReadAllTextAsync(file, cancellationToken);
             yield return _serializer.Deserialize<TEntity>(content);
         }
     }
@@ -52,7 +59,7 @@ public class DirectoryQueryable<TEntity> : IQuery<TEntity>
 
     public IQuery<TEntity> Where(Expression<Func<TEntity, bool>> predicate)
     {
-        List<string> _matches = new List<string>();
+        List<string> _matches = new();
         foreach (var file in _files)
         {
             var content = File.ReadAllText(file);

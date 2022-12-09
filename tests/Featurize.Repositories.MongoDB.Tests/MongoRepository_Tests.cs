@@ -65,7 +65,7 @@ internal class MongoRepository_Tests
         var result = await repo.FindByIdAsync(entity.Id);
 
         result.Should().NotBeNull();
-        result.Id.Should().Be(entity.Id);
+        result?.Id.Should().Be(entity.Id);
     }
 
 

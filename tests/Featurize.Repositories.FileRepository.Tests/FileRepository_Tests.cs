@@ -10,9 +10,9 @@ public class FileRepository_Tests
     {
         public void should_throw_if_arguments_null()
         {
-            Assert.Throws<ArgumentNullException>(() => new FileRepository<TestEntity>(null, null));
-            Assert.Throws<ArgumentNullException>(() => new FileRepository<TestEntity>(YamlWrapper.Create(), null));
-            Assert.Throws<ArgumentNullException>(() => new FileRepository<TestEntity>(null, ""));
+            Assert.Throws<ArgumentNullException>(() => new FileRepository<TestEntity>(null!, null!));
+            Assert.Throws<ArgumentNullException>(() => new FileRepository<TestEntity>(YamlWrapper.Create(), null!));
+            Assert.Throws<ArgumentNullException>(() => new FileRepository<TestEntity>(null!, ""));
         }
 
         public void should_set_values()
@@ -83,7 +83,7 @@ public class FileRepository_Tests
             var result = await repo.FindByIdAsync(TestEntity.Identify(entity));
 
             result.Should().NotBeNull();
-            result.Id.Should().Be(entity.Id);
+            result?.Id.Should().Be(entity.Id);
         }
     }
     public class SaveAsync
