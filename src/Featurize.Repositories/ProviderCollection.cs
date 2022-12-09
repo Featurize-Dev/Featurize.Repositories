@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 
 namespace Featurize.Repositories;
-public sealed class ProviderCollection : IProviderCollection
+internal sealed class ProviderCollection : IProviderCollection
 {
     private readonly List<IRepositoryProvider> _providers = new();
 
@@ -23,9 +23,21 @@ public sealed class ProviderCollection : IProviderCollection
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 }
 
+/// <summary>
+/// Describes a ProviderCollection
+/// </summary>
 public interface IProviderCollection : IEnumerable<IRepositoryProvider>
 {
+    /// <summary>
+    /// Gets the specified name.
+    /// </summary>
+    /// <param name="name">The name.</param>
+    /// <returns></returns>
     IRepositoryProvider? Get(string name);
+    /// <summary>
+    /// Adds the specified provider.
+    /// </summary>
+    /// <param name="provider">The provider.</param>
     void Add(IRepositoryProvider provider);
 }
      

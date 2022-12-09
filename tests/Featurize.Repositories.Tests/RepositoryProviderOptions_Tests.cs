@@ -11,30 +11,32 @@ public class RepositoryProviderOptions_Tests
         {
             var options = new RepositoryProviderOptions();
 
-
-            options.Providers.Count().Should().Be(1);
-            options.Providers.Should().BeOfType<ProviderCollection>();
+            options.Providers.Should().HaveCount(1);
             options.Providers.First().Should().BeOfType<DefaultRepositoryProvider>();
 
             options.Repositories.Should().NotBeNull();
-            options.Repositories.Should().BeOfType<RepositoryCollection>();
-            options.Repositories.Count().Should().Be(0);
+            options.Repositories.Should().HaveCount(0);
         }
     }
 
+
+
     public class AddRepository
     {
-        public void calls_add_on_repository_collection()
+        [Test]
+        public void should_increase_count()
         {
+            var options = new RepositoryProviderOptions();
 
+            options.Repositories.Add(new RepositoryInfo(typeof(TestEntity), typeof(Guid), new RepositoryOptions()));
+
+            options.Repositories.Should().HaveCount(1);
         }
     }
 }
 
 public class TestRepositoryCollection : IRepositoryCollection
 {
-    private readonly List<RepositoryInfo> _repositoryInfos = new();
-
     public bool AddCalled { get; set; }
 
     public int Count => throw new NotImplementedException();
