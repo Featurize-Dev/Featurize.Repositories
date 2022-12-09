@@ -5,6 +5,7 @@ namespace Featurize.Repositories.FileRepository.Tests;
 
 public class FileRepository_Tests
 {
+    private static Environment.SpecialFolder _folder = Environment.SpecialFolder.Personal;
     public class Ctor
     {
         public void should_throw_if_arguments_null()
@@ -16,7 +17,7 @@ public class FileRepository_Tests
 
         public void should_set_values()
         {
-            var directory = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+            var directory = Environment.GetFolderPath(_folder);
             var repo = new FileRepository<TestEntity>(YamlWrapper.Create(), directory);
 
             var baseDirectory = Path.Combine(directory, typeof(TestEntity).Name);
@@ -36,7 +37,8 @@ public class FileRepository_Tests
         [Test]
         public async Task should_remove_file_from_directory()
         {
-            var directory = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+            var directory = Environment.GetFolderPath(_folder);
+            Directory.CreateDirectory(directory);
             var repo = new FileRepository<TestEntity>(YamlWrapper.Create(), directory);
             
             var filename = Filename.Create($"{Guid.NewGuid()}.yaml");
@@ -59,7 +61,7 @@ public class FileRepository_Tests
         [Test]
         public async Task should_return_null_if_not_exists()
         {
-            var directory = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+            var directory = Environment.GetFolderPath(_folder);
             var repo = new FileRepository<TestEntity>(YamlWrapper.Create(), directory);
 
             var entity = new TestEntity() { Id = Guid.NewGuid() };
@@ -72,7 +74,7 @@ public class FileRepository_Tests
         [Test]
         public async Task should_return_item_if_exists()
         {
-            var directory = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+            var directory = Environment.GetFolderPath(_folder);
             var repo = new FileRepository<TestEntity>(YamlWrapper.Create(), directory);
 
             var entity = new TestEntity() { Id = Guid.NewGuid() };
@@ -90,7 +92,7 @@ public class FileRepository_Tests
         [Test]
         public async Task should_create_file()
         {
-            var directory = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+            var directory = Environment.GetFolderPath(_folder);
             var repo = new FileRepository<TestEntity>(YamlWrapper.Create(), directory);
             var entity = new TestEntity() { Id = Guid.NewGuid() };
 
