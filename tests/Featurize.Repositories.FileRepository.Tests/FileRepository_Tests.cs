@@ -100,6 +100,7 @@ public class FileRepository_Tests
 
             await repo.SaveAsync(entity);
 
+            Console.WriteLine(file);
             File.Exists(file).Should().BeTrue();
         }
     }
