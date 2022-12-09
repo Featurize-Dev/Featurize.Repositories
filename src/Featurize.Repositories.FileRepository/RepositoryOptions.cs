@@ -8,9 +8,9 @@ public static class RepositoryOptionsExtentions
         return options;
     }
 
-    public static RepositoryProviderOptions UseFile(this RepositoryProviderOptions options, IFileSerializer serializer)
+    public static RepositoryProviderOptions UseFile(this RepositoryProviderOptions options, IFileSerializer serializer, string providerName)
     {
-        options.AddProvider(new FileRepositoryProvider(serializer));
+        options.AddProvider(new FileRepositoryProvider(serializer, providerName));
         return options;
     }
 }

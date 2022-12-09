@@ -11,11 +11,11 @@ public class RepositoryProvider_Tests
         public void Should_Set_values()
         {
             var serialier = YamlWrapper.Create();
-            var provider = new FileRepositoryProvider(serialier);
+            var provider = new FileRepositoryProvider(serialier, "yaml");
 
             provider.Serializer.Should().NotBeNull();
             provider.Serializer.Should().BeOfType<YamlWrapper>();
-            provider.Name.Should().Be(serialier.ProviderName);
+            provider.Name.Should().Be("yaml");
         }
     }
 
@@ -26,7 +26,7 @@ public class RepositoryProvider_Tests
         {
             var services = new ServiceCollection();
             var serialier = YamlWrapper.Create();
-            var provider = new FileRepositoryProvider(serialier);
+            var provider = new FileRepositoryProvider(serialier, "yaml");
 
             provider.ConfigureProvider(services);
 
@@ -36,6 +36,31 @@ public class RepositoryProvider_Tests
 
             serializer.Should().NotBeNull();
             serializer.Should().BeOfType<YamlWrapper>();
+        }
+
+        [Test]
+        public void should_construct_repository()
+        {
+            var services = new ServiceCollection(); 
+            var serialier = YamlWrapper.Create();
+            var provider = new FileRepositoryProvider(serialier, "yaml");
+
+            provider.ConfigureProvider(services);
+            provider.ConfigureRepository(services, 
+                new RepositoryInfo(typeof(TestEntity), 
+                                   typeof(Filename), 
+                                   new RepositoryOptions().Directory("Test")));
+
+            var result = services.BuildServiceProvider();
+
+            var repo = result.GetRequiredService<IEntityRepository<TestEntity, Filename>>();
+            var fileRepo = result.GetRequiredService<IFileRepository<TestEntity>>();
+
+            repo.Should().NotBeNull();
+            repo.Should().BeOfType<FileRepository<TestEntity>>();
+            fileRepo.Should().NotBeNull();
+            fileRepo.Should().BeOfType<FileRepository<TestEntity>>();
+
         }
     }
 }

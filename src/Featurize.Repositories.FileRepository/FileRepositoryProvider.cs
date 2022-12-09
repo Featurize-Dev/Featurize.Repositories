@@ -4,12 +4,13 @@ namespace Featurize.Repositories.FileRepository;
 
 public class FileRepositoryProvider : IRepositoryProvider
 {
-    public FileRepositoryProvider(IFileSerializer serializer)
+    public FileRepositoryProvider(IFileSerializer serializer, string providerName)
     {
         Serializer = serializer;
+        Name = providerName;
     }
 
-    public string Name => Serializer.ProviderName;
+    public string Name { get; }
 
     public bool IsConfigured { get; private set; }
     public IFileSerializer Serializer { get; }
@@ -23,7 +24,7 @@ public class FileRepositoryProvider : IRepositoryProvider
     public void ConfigureRepository(IServiceCollection services, RepositoryInfo info)
     {
         var directory = GetDirectory(info.Options);
-        var serviceType = typeof(IRepository<,>).MakeGenericType(info.EntityType, typeof(Filename));
+        var serviceType = typeof(IEntityRepository<,>).MakeGenericType(info.EntityType, typeof(Filename));
         var yamlServiceType = typeof(IFileRepository<>).MakeGenericType(info.EntityType);
         var implType = typeof(FileRepository<>).MakeGenericType(info.EntityType);
 
