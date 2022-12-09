@@ -1,4 +1,5 @@
 using Featurize.Repositories;
+using Featurize.Repositories.FileRepository;
 using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.NamingConventions;
 
@@ -21,19 +22,51 @@ public class YamlFileRepository_Tests
                .Build();
 
 
+    public class YamlWrapper : IFileSerializer, IFileDeserializer
+    {
+        private ISerializer _serializer;
+        private IDeserializer _deserializer;
+        public YamlWrapper()
+        {
+            _serializer = new SerializerBuilder()
+                .WithNamingConvention(CamelCaseNamingConvention.Instance)
+                .WithTypeInspector(x => new SortedTypeInspector(x))
+                .ConfigureDefaultValuesHandling(
+                    DefaultValuesHandling.OmitNull |
+                    DefaultValuesHandling.OmitDefaults |
+                    DefaultValuesHandling.OmitEmptyCollections)
+                .Build();
+
+            _deserializer = new DeserializerBuilder()
+               .WithNamingConvention(CamelCaseNamingConvention.Instance)
+               .WithTypeInspector(x => new SortedTypeInspector(x))
+               .Build();
+        }
+
+        public T Deserialize<T>(string value)
+        {
+            return _deserializer.Deserialize<T>(value);
+        }
+
+        public string Serialize<T>(T entity)
+        {
+            return _serializer.Serialize(entity);
+        }
+    }
+
     public class Ctor
     {
         public void should_throw_if_arguments_null()
         {
-            Assert.Throws<ArgumentNullException>(() => new YamlFileRepository<TestEntity>(null, null, null));
-            Assert.Throws<ArgumentNullException>(() => new YamlFileRepository<TestEntity>(Serializer, null, null));
-            Assert.Throws<ArgumentNullException>(() => new YamlFileRepository<TestEntity>(Serializer, Deserializer, null));
+            Assert.Throws<ArgumentNullException>(() => new FileRepository<TestEntity>(null, null, null));
+            Assert.Throws<ArgumentNullException>(() => new FileRepository<TestEntity>(Serializer, null, null));
+            Assert.Throws<ArgumentNullException>(() => new FileRepository<TestEntity>(Serializer, Deserializer, null));
         }
 
         public void should_set_values()
         {
             var directory = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-            var repo = new YamlFileRepository<TestEntity>(Serializer, Deserializer, directory);
+            var repo = new FileRepository<TestEntity>(Serializer, Deserializer, directory);
 
             Assert.AreEqual(Serializer, repo.Serializer);
             Assert.AreEqual(Deserializer, repo.Deserializer);
@@ -53,8 +86,8 @@ public class YamlFileRepository_Tests
         public async Task should_remove_file_from_directory()
         {
             var directory = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-            var repo = new YamlFileRepository<TestEntity>(Serializer, Deserializer, directory);
-            var filename = YamlFilename.Create(Guid.NewGuid().ToString());
+            var repo = new FileRepository<TestEntity>(Serializer, Deserializer, directory);
+            var filename = Filename.Create(Guid.NewGuid().ToString());
             var baseDirectory = Path.Combine(directory, typeof(TestEntity).Name);
             var file = Path.Combine(baseDirectory, filename.ToString());
             var deletedFile = Path.Combine(baseDirectory, "deleted", filename.ToString());
@@ -77,11 +110,11 @@ public class YamlFileRepository_Tests
         public async Task should_return_null_if_not_exists()
         {
             var directory = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-            var repo = new YamlFileRepository<TestEntity>(Serializer, Deserializer, directory);
+            var repo = new FileRepository<TestEntity>(Serializer, Deserializer, directory);
 
             var entity = new TestEntity() { Id = Guid.NewGuid() };
 
-            var result = await repo.FindByIdAsync(YamlFilename.Create(entity.Id.ToString()));
+            var result = await repo.FindByIdAsync(Filename.Create(entity.Id.ToString()));
 
             Assert.IsNull(result);
         }
@@ -90,13 +123,13 @@ public class YamlFileRepository_Tests
         public async Task should_return_item_if_exists()
         {
             var directory = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-            var repo = new YamlFileRepository<TestEntity>(Serializer, Deserializer, directory);
+            var repo = new FileRepository<TestEntity>(Serializer, Deserializer, directory);
 
             var entity = new TestEntity() { Id = Guid.NewGuid() };
 
             await repo.SaveAsync(entity);
 
-            var result = await repo.FindByIdAsync(YamlFilename.Create(entity.Id.ToString()));
+            var result = await repo.FindByIdAsync(Filename.Create(entity.Id.ToString()));
 
             Assert.IsNotNull(result);
         }
@@ -108,10 +141,10 @@ public class YamlFileRepository_Tests
         public async Task should_create_file()
         {
             var directory = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-            var repo = new YamlFileRepository<TestEntity>(Serializer, Deserializer, directory);
+            var repo = new FileRepository<TestEntity>(Serializer, Deserializer, directory);
             var entity = new TestEntity() { Id = Guid.NewGuid() };
 
-            var filename = YamlFilename.Create(entity.Id.ToString());
+            var filename = Filename.Create(entity.Id.ToString());
             var file = Path.Combine(directory, entity.GetType().Name, filename.ToString());
 
             await repo.SaveAsync(entity);
@@ -136,11 +169,11 @@ public class YamlRepositoryOptions_Tests
 
 }
 
-public class TestEntity : IIdentifiable<TestEntity, YamlFilename>
+public class TestEntity : IIdentifiable<TestEntity, Filename>
 {
     public Guid Id { get; set; }
-    public static YamlFilename Identify(TestEntity entity)
+    public static Filename Identify(TestEntity entity)
     {
-        return YamlFilename.Create(entity.Id.ToString());
+        return Filename.Create(entity.Id.ToString());
     }
 }

@@ -1,8 +1,7 @@
-﻿using Featurize.Repositories;
-using System.Linq.Expressions;
+﻿using System.Linq.Expressions;
 using YamlDotNet.Serialization;
 
-namespace Featurize.Repositories.YamlFileRepository;
+namespace Featurize.Repositories.FileRepository;
 
 public class DirectoryQueryable<TEntity> : IQuery<TEntity>
 {

@@ -1,8 +1,9 @@
-﻿using Featurize.Repositories.YamlFileRepository;
+﻿using Featurize.Repositories;
+using Featurize.Repositories.FileRepository;
 
-namespace Featurize.Repositories;
+namespace Featurize.Repositories.FileRepository;
 
-public static class YamlRepositoryOptions
+public static class RepositoryOptionsExtentions
 {
     public static RepositoryOptions Directory(this RepositoryOptions options, string value)
     {
@@ -11,14 +12,14 @@ public static class YamlRepositoryOptions
     }
 
     public static RepositoryProviderOptions AddYamlRepository<TEntity>(this RepositoryProviderOptions options, string directory)
-        where TEntity : class, IIdentifiable<TEntity, YamlFilename>
+        where TEntity : class, IIdentifiable<TEntity, Filename>
     {
-        if (!options.Providers.OfType<YamlFileRepositoryProvider>().Any())
+        if (!options.Providers.OfType<FileRepositoryProvider>().Any())
         {
-            options.AddProvider(new YamlFileRepositoryProvider());
+            options.AddProvider(new FileRepositoryProvider());
         }
 
-        options.AddRepository<TEntity, YamlFilename>(
+        options.AddRepository<TEntity, Filename>(
             options => options.Directory(directory).Provider("Yaml"));
 
         return options;

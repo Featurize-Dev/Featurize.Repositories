@@ -19,7 +19,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Featurize.Repositories.Mong
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Featurize.Repositories.InMemory", "src\Featurize.Repositories.InMemory\Featurize.Repositories.InMemory.csproj", "{DD5A33BC-D2A4-42D3-9C66-10A5FE9823E1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Featurize.Repositories.YamlFileRepository", "src\Featurize.Repositories.YamlFileRepository\Featurize.Repositories.YamlFileRepository.csproj", "{E45CE1FC-7110-4775-9627-022A8207F2FC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Featurize.Repositories.FileRepository", "src\Featurize.Repositories.YamlFileRepository\Featurize.Repositories.FileRepository.csproj", "{E45CE1FC-7110-4775-9627-022A8207F2FC}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Featurize.Repositories.YamlFileRepository.Tests", "tests\Featurize.Repositories.YamlFileRepository.Tests\Featurize.Repositories.YamlFileRepository.Tests.csproj", "{1E715C7D-5AEA-4598-A870-F80A4FF620CD}"
 EndProject

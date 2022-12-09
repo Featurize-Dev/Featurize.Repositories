@@ -2,11 +2,11 @@
 using YamlDotNet.Serialization;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Featurize.Repositories.YamlFileRepository;
+namespace Featurize.Repositories.FileRepository;
 
-public class YamlFileRepositoryProvider : IRepositoryProvider
+public class FileRepositoryProvider : IRepositoryProvider
 {
-    public YamlFileRepositoryProvider()
+    public FileRepositoryProvider()
     {
     }
 
@@ -16,19 +16,19 @@ public class YamlFileRepositoryProvider : IRepositoryProvider
 
     public void ConfigureProvider(IServiceCollection services)
     {
-        services.AddScoped(x => new SerializerBuilder()
-            .WithNamingConvention(CamelCaseNamingConvention.Instance)
-            .WithTypeInspector(x => new SortedTypeInspector(x))
-            .ConfigureDefaultValuesHandling(
-                DefaultValuesHandling.OmitNull |
-                DefaultValuesHandling.OmitDefaults |
-                DefaultValuesHandling.OmitEmptyCollections)
-            .Build());
+        //services.AddScoped(x => new SerializerBuilder()
+        //    .WithNamingConvention(CamelCaseNamingConvention.Instance)
+        //    .WithTypeInspector(x => new SortedTypeInspector(x))
+        //    .ConfigureDefaultValuesHandling(
+        //        DefaultValuesHandling.OmitNull |
+        //        DefaultValuesHandling.OmitDefaults |
+        //        DefaultValuesHandling.OmitEmptyCollections)
+        //    .Build());
 
-        services.AddScoped(x => new DeserializerBuilder()
-               .WithNamingConvention(CamelCaseNamingConvention.Instance)
-               .WithTypeInspector(x => new SortedTypeInspector(x))
-               .Build());
+        //services.AddScoped(x => new DeserializerBuilder()
+        //       .WithNamingConvention(CamelCaseNamingConvention.Instance)
+        //       .WithTypeInspector(x => new SortedTypeInspector(x))
+        //       .Build());
 
         IsConfigured = true;
     }
@@ -36,9 +36,9 @@ public class YamlFileRepositoryProvider : IRepositoryProvider
     public void ConfigureRepository(IServiceCollection services, RepositoryInfo info)
     {
         var directory = GetDirectory(info.Options);
-        var serviceType = typeof(IRepository<,>).MakeGenericType(info.EntityType, typeof(YamlFilename));
-        var yamlServiceType = typeof(IYamlFileRepository<>).MakeGenericType(info.EntityType);
-        var implType = typeof(YamlFileRepository<>).MakeGenericType(info.EntityType);
+        var serviceType = typeof(IRepository<,>).MakeGenericType(info.EntityType, typeof(Filename));
+        var yamlServiceType = typeof(IFileRepository<>).MakeGenericType(info.EntityType);
+        var implType = typeof(FileRepository<>).MakeGenericType(info.EntityType);
 
         services.AddScoped(serviceType, CreateRepository(directory, implType));
         services.AddScoped(yamlServiceType, CreateRepository(directory, implType));

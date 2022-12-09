@@ -1,7 +1,7 @@
 ﻿using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.TypeInspectors;
 
-namespace Featurize.Repositories.YamlFileRepository;
+namespace Featurize.Repositories.FileRepository;
 
 public sealed class SortedTypeInspector : TypeInspectorSkeleton
 {

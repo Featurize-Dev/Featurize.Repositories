@@ -18,7 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Featurize.Repositories.YamlFileRepository\Featurize.Repositories.YamlFileRepository.csproj" />
+    <ProjectReference Include="..\..\src\Featurize.Repositories.YamlFileRepository\Featurize.Repositories.FileRepository.csproj" />
   </ItemGroup>
 
 </Project>

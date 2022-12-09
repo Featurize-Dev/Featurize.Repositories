@@ -1,13 +1,9 @@
-﻿using Featurize.Repositories;
-using YamlDotNet.Serialization.NamingConventions;
-using YamlDotNet.Serialization;
+﻿namespace Featurize.Repositories.FileRepository;
 
-namespace Featurize.Repositories.YamlFileRepository;
-
-public class YamlFileRepository<TEntity> : IYamlFileRepository<TEntity>
-    where TEntity : class, IIdentifiable<TEntity, YamlFilename>, new()
+public class FileRepository<TEntity> : IFileRepository<TEntity>
+    where TEntity : class, IIdentifiable<TEntity, Filename>, new()
 {
-    public YamlFileRepository(ISerializer serializer, IDeserializer deserializer, string path)
+    public FileRepository(IFileSerializer serializer, IFileDeserializer deserializer, string path)
     {
         ArgumentNullException.ThrowIfNull(serializer);
         ArgumentNullException.ThrowIfNull(deserializer);
@@ -19,14 +15,14 @@ public class YamlFileRepository<TEntity> : IYamlFileRepository<TEntity>
         DeletedDirectory = Path.Combine(BaseDirectory, "deleted");
     }
 
-    public ISerializer Serializer { get; }
-    public IDeserializer Deserializer { get; }
+    public IFileSerializer Serializer { get; }
+    public IFileDeserializer Deserializer { get; }
     public string BaseDirectory { get; }
     public string DeletedDirectory { get; }
 
     public IQuery<TEntity> Query => new DirectoryQueryable<TEntity>(Deserializer, Directory.EnumerateFiles(BaseDirectory));
 
-    public ValueTask DeleteAsync(YamlFilename id)
+    public ValueTask DeleteAsync(Filename id)
     {
         ArgumentNullException.ThrowIfNull(id);
 
@@ -38,17 +34,17 @@ public class YamlFileRepository<TEntity> : IYamlFileRepository<TEntity>
         return ValueTask.CompletedTask;
     }
 
-    public async ValueTask<TEntity?> FindByIdAsync(YamlFilename id)
+    public async ValueTask<TEntity?> FindByIdAsync(Filename id)
     {
         ArgumentNullException.ThrowIfNull(id);
 
         CreateDirectories();
 
         var filename = CreateFilename(id);
-        
+
         if (!File.Exists(filename))
         {
-            return default;   
+            return default;
         }
 
         var result = await File.ReadAllTextAsync(filename);
@@ -69,7 +65,7 @@ public class YamlFileRepository<TEntity> : IYamlFileRepository<TEntity>
         await File.WriteAllTextAsync(CreateFilename(id), item);
     }
 
-    private string CreateFilename(YamlFilename id)
+    private string CreateFilename(Filename id)
     {
         return Path.Combine(BaseDirectory, id.ToString());
     }
@@ -79,4 +75,15 @@ public class YamlFileRepository<TEntity> : IYamlFileRepository<TEntity>
         Directory.CreateDirectory(BaseDirectory);
         Directory.CreateDirectory(DeletedDirectory);
     }
+}
+
+
+public interface IFileSerializer
+{
+    string Serialize<T>(T entity);
+}
+
+public interface IFileDeserializer
+{
+    T Deserialize<T>(string value);
 }
