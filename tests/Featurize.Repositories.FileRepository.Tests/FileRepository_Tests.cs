@@ -96,17 +96,9 @@ public class FileRepository_Tests
             var entity = new TestEntity() { Id = Guid.NewGuid() };
 
             var filename = TestEntity.Identify(entity);
-            var file = Path.Combine(directory, entity.GetType().Name, filename.ToString());
+            var file = Path.Combine(repo.BaseDirectory, filename.ToString());
 
             await repo.SaveAsync(entity);
-
-            Console.WriteLine($"Searched File: {file}");
-
-            foreach (var dFile in Directory.GetFiles(repo.BaseDirectory))
-            {
-                Console.WriteLine(dFile);
-
-            }
 
             File.Exists(file).Should().BeTrue();
         }
