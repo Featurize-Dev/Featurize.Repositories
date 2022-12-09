@@ -65,23 +65,3 @@ public class AddRepositoryProvider
 
     }
 }
-
-public class TestEntity : IIdentifiable<TestEntity, Guid>
-{
-    public Guid Id { get; set; }
-
-    public static Guid Identify(TestEntity entity)
-    {
-        return entity.Id;
-    }
-}
-
-public class TestEntity2 : IIdentifiable<TestEntity2, Guid>
-{
-    public Guid Id { get; set; }
-
-    public static Guid Identify(TestEntity2 entity)
-    {
-        return entity.Id;
-    }
-}

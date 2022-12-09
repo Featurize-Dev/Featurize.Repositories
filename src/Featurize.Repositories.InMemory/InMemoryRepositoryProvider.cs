@@ -7,10 +7,20 @@ namespace Featurize.Repositories.InMemory;
 /// </summary>
 public sealed class InMemoryRepositoryProvider : IRepositoryProvider
 {
+    /// <summary>
+    /// Gets the default name.
+    /// </summary>
+    /// <value>
+    /// The default name.
+    /// </value>
     public static string DefaultName => "InMemory";
 
+    /// <summary>
+    /// </summary>
     public bool IsConfigured => true;
 
+    /// <summary>
+    /// </summary>
     public string Name => DefaultName;
 
     /// <summary>

@@ -5,7 +5,7 @@ namespace Featurize.Repositories;
 /// <summary>
 /// A collection for repoesitory information.
 /// </summary>
-public sealed class RepositoryCollection : IRepositoryCollection
+internal sealed class RepositoryCollection : IRepositoryCollection
 {
     private readonly HashSet<RepositoryInfo> _items = new();
     /// <summary>

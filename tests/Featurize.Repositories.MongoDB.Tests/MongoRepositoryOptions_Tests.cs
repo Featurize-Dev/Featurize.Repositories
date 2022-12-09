@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 namespace Featurize.Repositories.MongoDB.Tests;
 public class MongoRepositoryOptions_Tests
 {
+
     public class GetCollectionName
     {
         [Test]
@@ -16,9 +17,9 @@ public class MongoRepositoryOptions_Tests
             var value = Guid.NewGuid().ToString();
             options.CollectionName(value);
 
-            var result = options.GetCollectionName();
+            options.Should().ContainKey("CollectionName");
 
-            result.Should().Be(value);
+            options["CollectionName"].Should().Be(value);
         }
     }
 
@@ -31,9 +32,9 @@ public class MongoRepositoryOptions_Tests
             var value = Guid.NewGuid().ToString();
             options.Database(value);
 
-            var result = options.GetDatabase();
+            options.Should().ContainKey("Database");
 
-            result.Should().Be(value);
+            options["Database"].Should().Be(value);
         }
     }
 

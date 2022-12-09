@@ -19,7 +19,11 @@ public sealed class RepositoryProviderOptions
     /// Collection that holds the registered repositories.
     /// </summary>
     public IRepositoryCollection Repositories { get; } = new RepositoryCollection();
-    
+
+    /// <summary>
+    /// Adds the provider.
+    /// </summary>
+    /// <param name="provider">The provider.</param>
     public void AddProvider(IRepositoryProvider provider)
     {
         Providers.Add(provider);
