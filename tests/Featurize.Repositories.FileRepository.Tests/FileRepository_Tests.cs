@@ -100,7 +100,14 @@ public class FileRepository_Tests
 
             await repo.SaveAsync(entity);
 
-            Console.WriteLine(file);
+            Console.WriteLine($"Searched File: {file}");
+
+            foreach (var dFile in Directory.GetFiles(repo.BaseDirectory))
+            {
+                Console.WriteLine(dFile);
+
+            }
+
             File.Exists(file).Should().BeTrue();
         }
     }
