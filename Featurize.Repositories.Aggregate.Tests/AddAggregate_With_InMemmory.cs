@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Featurize.Repositories.Aggregate.Tests;
-public class AddAggregate_With_InMemmory
+public class AddAggregate_With_InMemory
 {
     [Test]
     public async Task Should_register_EventRepsitory()
