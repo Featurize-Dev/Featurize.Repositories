@@ -1,4 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using MongoDB.Bson.Serialization.Serializers;
+using MongoDB.Bson.Serialization;
 using MongoDB.Driver;
 
 namespace Featurize.Repositories.MongoDB;
@@ -72,11 +74,11 @@ public sealed class MongoRepositoryProvider : IRepositoryProvider
             return method?.Invoke(database, new[] { GetCollectionName(info.Options), null })!;
         });
 
-
-
+        var repositoryType = typeof(IRepository<,>).MakeGenericType(info.EntityType, info.IdType);
         var serviceType = typeof(IEntityRepository<,>).MakeGenericType(info.EntityType, info.IdType);
         var implType = typeof(MongoEntityRepository<,>).MakeGenericType(info.EntityType, info.IdType);
         services.AddTransient(serviceType, implType);
+        services.AddTransient(repositoryType, implType);
     }
 
     private static string GetDatabase(RepositoryOptions options)

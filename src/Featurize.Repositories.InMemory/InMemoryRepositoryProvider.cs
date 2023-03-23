@@ -40,7 +40,9 @@ public sealed class InMemoryRepositoryProvider : IRepositoryProvider
     {
         var implementationType = typeof(InMemoryRepository<,>).MakeGenericType(info.EntityType, info.IdType);
         var serviceType = typeof(IEntityRepository<,>).MakeGenericType(info.EntityType, info.IdType);
+        var repositoryType = typeof(IRepository<,>).MakeGenericType(info.EntityType, info.IdType);
 
         services.AddSingleton(serviceType, implementationType);
+        services.AddSingleton(repositoryType, implementationType);
     }
 }

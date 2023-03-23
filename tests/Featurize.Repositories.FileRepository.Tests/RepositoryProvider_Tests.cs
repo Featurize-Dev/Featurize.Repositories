@@ -53,9 +53,13 @@ public class RepositoryProvider_Tests
 
             var result = services.BuildServiceProvider();
 
+            var baseRepo = result.GetRequiredService<IRepository<TestEntity, Filename>>();
             var repo = result.GetRequiredService<IEntityRepository<TestEntity, Filename>>();
             var fileRepo = result.GetRequiredService<IFileRepository<TestEntity>>();
 
+
+            baseRepo.Should().NotBeNull();
+            baseRepo.Should().BeOfType<FileRepository<TestEntity>>();
             repo.Should().NotBeNull();
             repo.Should().BeOfType<FileRepository<TestEntity>>();
             fileRepo.Should().NotBeNull();

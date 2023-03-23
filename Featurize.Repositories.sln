@@ -23,6 +23,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Featurize.Repositories.File
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Featurize.Repositories.FileRepository.Tests", "tests\Featurize.Repositories.FileRepository.Tests\Featurize.Repositories.FileRepository.Tests.csproj", "{8508EB91-B990-4607-A32D-E519AB3E0AB0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Featurize.Repositories.Aggregates", "src\Featurize.Repositories.Aggregates\Featurize.Repositories.Aggregates.csproj", "{DD598C09-5EFD-4E7C-9953-FCED5FAB4CAB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Featurize.Repositories.Aggregate.Tests", "Featurize.Repositories.Aggregate.Tests\Featurize.Repositories.Aggregate.Tests.csproj", "{EDC0A345-1B90-4B69-B04B-5BF08A77FD1B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -57,6 +61,14 @@ Global
 		{8508EB91-B990-4607-A32D-E519AB3E0AB0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8508EB91-B990-4607-A32D-E519AB3E0AB0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8508EB91-B990-4607-A32D-E519AB3E0AB0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DD598C09-5EFD-4E7C-9953-FCED5FAB4CAB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DD598C09-5EFD-4E7C-9953-FCED5FAB4CAB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DD598C09-5EFD-4E7C-9953-FCED5FAB4CAB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DD598C09-5EFD-4E7C-9953-FCED5FAB4CAB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EDC0A345-1B90-4B69-B04B-5BF08A77FD1B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EDC0A345-1B90-4B69-B04B-5BF08A77FD1B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EDC0A345-1B90-4B69-B04B-5BF08A77FD1B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EDC0A345-1B90-4B69-B04B-5BF08A77FD1B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -69,6 +81,8 @@ Global
 		{DD5A33BC-D2A4-42D3-9C66-10A5FE9823E1} = {0959A09E-193B-4822-A315-394298998951}
 		{4F3133B8-82DA-4911-83DD-F00CE740B95F} = {0959A09E-193B-4822-A315-394298998951}
 		{8508EB91-B990-4607-A32D-E519AB3E0AB0} = {9CA42BD8-A0B5-4571-9530-F80B23395D53}
+		{DD598C09-5EFD-4E7C-9953-FCED5FAB4CAB} = {0959A09E-193B-4822-A315-394298998951}
+		{EDC0A345-1B90-4B69-B04B-5BF08A77FD1B} = {9CA42BD8-A0B5-4571-9530-F80B23395D53}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A7559BD2-5233-459E-B6EB-BC04D855BB75}
