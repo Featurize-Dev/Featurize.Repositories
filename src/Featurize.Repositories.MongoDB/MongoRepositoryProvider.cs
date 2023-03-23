@@ -1,4 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using MongoDB.Bson.Serialization.Serializers;
+using MongoDB.Bson.Serialization;
 using MongoDB.Driver;
 
 namespace Featurize.Repositories.MongoDB;
@@ -71,7 +73,6 @@ public sealed class MongoRepositoryProvider : IRepositoryProvider
             var method = type.GetMethod(nameof(database.GetCollection))?.MakeGenericMethod(info.EntityType);
             return method?.Invoke(database, new[] { GetCollectionName(info.Options), null })!;
         });
-
 
         var repositoryType = typeof(IRepository<,>).MakeGenericType(info.EntityType, info.IdType);
         var serviceType = typeof(IEntityRepository<,>).MakeGenericType(info.EntityType, info.IdType);

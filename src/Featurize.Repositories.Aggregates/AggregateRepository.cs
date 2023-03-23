@@ -4,8 +4,8 @@ public class AggregateRepository<T, TId> : IRepository<T, TId>
     where T : class, IAggregate<T, TId>
     where TId : struct, IComparable<TId>
 {
-    private readonly IEntityRepository<Event<TId>, TId> _storage;
-    public AggregateRepository(IEntityRepository<Event<TId>, TId> storage)
+    private readonly IEntityRepository<Event<T, TId>, TId> _storage;
+    public AggregateRepository(IEntityRepository<Event<T, TId>, TId> storage)
     {
         _storage = storage;
     }

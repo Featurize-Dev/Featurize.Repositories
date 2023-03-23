@@ -12,7 +12,7 @@ public static class RepositoryProviderOptionsExtensions
             options.Providers.Add(new AggregateRepositoryProvider());
         }
 
-        options.AddRepository<Event<TId>, Guid>(x => config?.Invoke(x));
+        options.AddRepository<Event<TAggregate, TId>, Guid>(x => config?.Invoke(x));
         options.AddRepository<TAggregate, TId>(x =>
         {
             var provider = x.GetProviderName();

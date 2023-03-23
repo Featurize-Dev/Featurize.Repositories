@@ -60,9 +60,9 @@ public class AggregateRoot_Tests
             
             var aggregate = new TestAggregate(aggregateId);
             var events = new[] {
-                new Event<Guid> { AggregateId = aggregateId, Version = 1, Payload = new TestEvent() },
-                new Event<Guid> { AggregateId = aggregateId, Version = 2, Payload = new TestEvent() },
-                new Event<Guid> { AggregateId = aggregateId, Version = 3, Payload = new TestEvent() },
+                new Event<TestAggregate, Guid> { AggregateId = aggregateId, Version = 1, Payload = new TestEvent() },
+                new Event<TestAggregate, Guid> { AggregateId = aggregateId, Version = 2, Payload = new TestEvent() },
+                new Event<TestAggregate, Guid> { AggregateId = aggregateId, Version = 3, Payload = new TestEvent() },
             };
             aggregate.LoadFromHistory(events);
 
@@ -77,9 +77,9 @@ public class AggregateRoot_Tests
         {
             var aggregateId = Guid.NewGuid();
             var events = new[] {
-                new Event<Guid> { AggregateId = aggregateId, Version = 1, Payload = new TestEvent() },
-                new Event<Guid> { AggregateId = aggregateId, Version = 2, Payload = new TestEvent() },
-                new Event<Guid> { AggregateId = aggregateId, Version = 3, Payload = new TestEvent() },
+                new Event<TestAggregate, Guid> { AggregateId = aggregateId, Version = 1, Payload = new TestEvent() },
+                new Event<TestAggregate, Guid> { AggregateId = aggregateId, Version = 2, Payload = new TestEvent() },
+                new Event<TestAggregate, Guid> { AggregateId = aggregateId, Version = 3, Payload = new TestEvent() },
             };
 
             var aggregate = new TestAggregate(aggregateId);
@@ -94,9 +94,9 @@ public class AggregateRoot_Tests
         {
             var aggregateId = Guid.NewGuid();
             var events = new[] {
-                new Event<Guid> { AggregateId = aggregateId, Version = 1, Payload = new TestEvent() },
-                new Event<Guid> { AggregateId = aggregateId, Version = 2, Payload = new TestEvent() },
-                new Event<Guid> { AggregateId = aggregateId, Version = 3, Payload = new TestEvent() },
+                new Event<TestAggregate, Guid> { AggregateId = aggregateId, Version = 1, Payload = new TestEvent() },
+                new Event<TestAggregate, Guid> { AggregateId = aggregateId, Version = 2, Payload = new TestEvent() },
+                new Event<TestAggregate, Guid> { AggregateId = aggregateId, Version = 3, Payload = new TestEvent() },
             };
 
             var aggregate = new TestAggregate(aggregateId);
@@ -124,9 +124,9 @@ public class AggregateRoot_Tests
 
             var aggregate = new TestAggregate(aggregateId);
             var events = new[] {
-                new Event<Guid> { AggregateId = aggregateId, Version = 1, Payload = new TestEvent() },
-                new Event<Guid> { AggregateId = aggregateId, Version = 2, Payload = new TestEvent() },
-                new Event<Guid> { AggregateId = aggregateId, Version = 3, Payload = new TestEvent() },
+                new Event<TestAggregate, Guid> { AggregateId = aggregateId, Version = 1, Payload = new TestEvent() },
+                new Event<TestAggregate, Guid> { AggregateId = aggregateId, Version = 2, Payload = new TestEvent() },
+                new Event<TestAggregate, Guid> { AggregateId = aggregateId, Version = 3, Payload = new TestEvent() },
             };
             aggregate.LoadFromHistory(events);
 

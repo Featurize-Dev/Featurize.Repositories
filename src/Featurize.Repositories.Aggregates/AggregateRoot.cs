@@ -6,15 +6,15 @@ public interface IAggregate<TSelf, TId> : IIdentifiable<TSelf, TId>
 {
     TId Id { get; }
     int Version { get; }
-    IEnumerable<Event<TId>> GetUncommittedChanges();
-    void LoadFromHistory(IEnumerable<Event<TId>> events);
+    IEnumerable<Event<TSelf, TId>> GetUncommittedChanges();
+    void LoadFromHistory(IEnumerable<Event<TSelf, TId>> events);
     static abstract TSelf Create(TId id);
 }
 
 public abstract class AggregateRoot<TAggregate, TId>
     where TId: struct
 {
-    private readonly EventCollection<TId> _events = new();
+    private readonly EventCollection<TAggregate, TId> _events = new();
     public TId Id { get; private set; }
     public int Version { get; private set; }
 
@@ -22,12 +22,12 @@ public abstract class AggregateRoot<TAggregate, TId>
 
     protected AggregateRoot(TId id) { Id = id; Version = 0; }
 
-    public IEnumerable<Event<TId>> GetUncommittedChanges()
+    public IEnumerable<Event<TAggregate, TId>> GetUncommittedChanges()
     {
         return _events;
     }
 
-    public void LoadFromHistory(IEnumerable<Event<TId>> events)
+    public void LoadFromHistory(IEnumerable<Event<TAggregate, TId>> events)
     {
         foreach (var e in events)
         {
@@ -43,7 +43,7 @@ public abstract class AggregateRoot<TAggregate, TId>
         ArgumentNullException.ThrowIfNull(Id, nameof(Id));
 
         ExpectedVersion += 1;
-        ApplyEvent(new Event<TId>
+        ApplyEvent(new Event<TAggregate, TId>
         {
             AggregateId = Id,
             Version = ExpectedVersion,
@@ -51,13 +51,13 @@ public abstract class AggregateRoot<TAggregate, TId>
         }, true);
     }
 
-    private void ApplyEvent(Event<TId> e, bool isNew)
+    private void ApplyEvent(Event<TAggregate, TId> e, bool isNew)
     {
         Apply(e);
         if (isNew) _events.Append(e);
     }
 
-    private void Apply(Event<TId> e)
+    private void Apply(Event<TAggregate, TId> e)
     {
         this.AsDynamic().Apply(e.Payload);
     }
