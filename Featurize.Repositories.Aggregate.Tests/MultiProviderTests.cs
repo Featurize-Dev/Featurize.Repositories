@@ -68,7 +68,7 @@ public class MultiProviderTests
 
         features.AddRepositories(x => {
             x.AddProvider(new InMemoryRepositoryProvider());
-            x.AddMongo("mongodb://username:password@localhost:27017");
+            x.AddMongo(_runner.ConnectionString);
             x.AddAggregate<MongoAggregate, Guid>(x =>
             {
                 x.Provider(MongoRepositoryProvider.DefaultName);
