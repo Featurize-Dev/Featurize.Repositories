@@ -54,7 +54,9 @@ public class MongoRepositoryProvider_Tests
             var sp = services.BuildServiceProvider();
 
             var repo = sp.GetService<IEntityRepository<Entity, Guid>>();
+            var baseRepo = sp.GetService<IRepository<Entity, Guid>>();
 
+            baseRepo.Should().NotBeNull();
             repo.Should().NotBeNull();
         }
     }

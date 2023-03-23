@@ -54,10 +54,12 @@ public class FileRepositoryProvider : IRepositoryProvider
     public void ConfigureRepository(IServiceCollection services, RepositoryInfo info)
     {
         var directory = GetDirectory(info.Options);
+        var repsitoryType = typeof(IRepository<,>).MakeGenericType(info.EntityType, typeof(Filename));
         var serviceType = typeof(IEntityRepository<,>).MakeGenericType(info.EntityType, typeof(Filename));
         var yamlServiceType = typeof(IFileRepository<>).MakeGenericType(info.EntityType);
         var implType = typeof(FileRepository<>).MakeGenericType(info.EntityType);
 
+        services.AddScoped(repsitoryType, CreateRepository(directory, implType));
         services.AddScoped(serviceType, CreateRepository(directory, implType));
         services.AddScoped(yamlServiceType, CreateRepository(directory, implType));
     }

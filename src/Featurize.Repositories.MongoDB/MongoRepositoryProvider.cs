@@ -73,10 +73,11 @@ public sealed class MongoRepositoryProvider : IRepositoryProvider
         });
 
 
-
+        var repositoryType = typeof(IRepository<,>).MakeGenericType(info.EntityType, info.IdType);
         var serviceType = typeof(IEntityRepository<,>).MakeGenericType(info.EntityType, info.IdType);
         var implType = typeof(MongoEntityRepository<,>).MakeGenericType(info.EntityType, info.IdType);
         services.AddTransient(serviceType, implType);
+        services.AddTransient(repositoryType, implType);
     }
 
     private static string GetDatabase(RepositoryOptions options)
