@@ -14,7 +14,7 @@ public interface IAggregate<TSelf, TId> : IIdentifiable<TSelf, TId>
 public abstract class AggregateRoot<TAggregate, TId>
     where TId: struct
 {
-    private EventCollection<TId> _events = new();
+    private readonly EventCollection<TId> _events = new();
     public TId Id { get; private set; }
     public int Version { get; private set; }
 
@@ -39,10 +39,13 @@ public abstract class AggregateRoot<TAggregate, TId>
 
     public void ApplyEvent(IEvent e)
     {
+        ArgumentNullException.ThrowIfNull(e, nameof(e));
+        ArgumentNullException.ThrowIfNull(Id, nameof(Id));
+
         ExpectedVersion += 1;
         ApplyEvent(new Event<TId>
         {
-            AggregateId = Id.ToString(),
+            AggregateId = Id,
             Version = ExpectedVersion,
             Payload = e
         }, true);

@@ -9,6 +9,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="EphemeralMongo6" Version="1.1.0" />
+    <PackageReference Include="FluentAssertions" Version="6.10.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.3.2" />
     <PackageReference Include="NUnit" Version="3.13.3" />
@@ -19,6 +21,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\src\Featurize.Repositories.Aggregates\Featurize.Repositories.Aggregates.csproj" />
+    <ProjectReference Include="..\src\Featurize.Repositories.InMemory\Featurize.Repositories.InMemory.csproj" />
     <ProjectReference Include="..\src\Featurize.Repositories.MongoDB\Featurize.Repositories.MongoDB.csproj" />
   </ItemGroup>
 

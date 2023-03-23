@@ -6,9 +6,9 @@ public class Event<TId>
     where TId : struct
 { 
     public Guid Id { get; private set; } = Guid.NewGuid();
-    public string AggregateId { get; set; }
+    public TId AggregateId { get; set; }
     public int Version { get; set; }
-    public IEvent Payload { get; set; }
+    public IEvent? Payload { get; set; }
     public static Guid Identify(Event<TId> entity)
     {
         return entity.Id;

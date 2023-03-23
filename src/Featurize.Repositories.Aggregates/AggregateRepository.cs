@@ -2,7 +2,7 @@
 
 public class AggregateRepository<T, TId> : IRepository<T, TId>
     where T : class, IAggregate<T, TId>
-    where TId : struct
+    where TId : struct, IComparable<TId>
 {
     private readonly IEntityRepository<Event<TId>, TId> _storage;
     public AggregateRepository(IEntityRepository<Event<TId>, TId> storage)
@@ -13,8 +13,9 @@ public class AggregateRepository<T, TId> : IRepository<T, TId>
     public async ValueTask<T?> FindByIdAsync(TId id)
     {
         var events = await _storage
-            .Query.AsAsyncQueryable()
-            .Where(x => x.AggregateId == id.ToString())
+            .Query
+            .Where(x => x.AggregateId.Equals(id))
+            .OrderBy(x => x.Version)
             .ToListAsync();
 
         var aggregate = T.Create(id);

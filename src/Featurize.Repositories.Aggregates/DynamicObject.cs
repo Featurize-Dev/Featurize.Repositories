@@ -6,13 +6,15 @@ namespace Featurize.Repositories.Aggregates;
 
 //FROM http://blogs.msdn.com/b/davidebb/archive/2010/01/18/use-c-4-0-dynamic-to-drastically-simplify-your-private-reflection-code.aspx
 //doesnt count to line counts :)
-class PrivateReflectionDynamicObject : DynamicObject
+internal class PrivateReflectionDynamicObject : DynamicObject
 {
 
+#pragma warning disable IDE0044 // Add readonly modifier
     private static IDictionary<Type, IDictionary<string, IProperty>> _propertiesOnType = new ConcurrentDictionary<Type, IDictionary<string, IProperty>>();
+#pragma warning restore IDE0044 // Add readonly modifier
 
     // Simple abstraction to make field and property access consistent
-    interface IProperty
+    private interface IProperty
     {
         string Name { get; }
         object GetValue(object obj, object[] index);
@@ -20,9 +22,11 @@ class PrivateReflectionDynamicObject : DynamicObject
     }
 
     // IProperty implementation over a PropertyInfo
-    class Property : IProperty
+    private class Property : IProperty
     {
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         internal PropertyInfo PropertyInfo { get; set; }
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
         string IProperty.Name
         {
@@ -34,7 +38,9 @@ class PrivateReflectionDynamicObject : DynamicObject
 
         object IProperty.GetValue(object obj, object[] index)
         {
+#pragma warning disable CS8603 // Possible null reference return.
             return PropertyInfo.GetValue(obj, index);
+#pragma warning restore CS8603 // Possible null reference return.
         }
 
         void IProperty.SetValue(object obj, object val, object[] index)
@@ -44,9 +50,11 @@ class PrivateReflectionDynamicObject : DynamicObject
     }
 
     // IProperty implementation over a FieldInfo
-    class Field : IProperty
+    private class Field : IProperty
     {
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         internal FieldInfo FieldInfo { get; set; }
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
         string IProperty.Name
         {
@@ -59,7 +67,9 @@ class PrivateReflectionDynamicObject : DynamicObject
 
         object IProperty.GetValue(object obj, object[] index)
         {
+#pragma warning disable CS8603 // Possible null reference return.
             return FieldInfo.GetValue(obj);
+#pragma warning restore CS8603 // Possible null reference return.
         }
 
         void IProperty.SetValue(object obj, object val, object[] index)
@@ -69,14 +79,20 @@ class PrivateReflectionDynamicObject : DynamicObject
     }
 
 
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
     private object RealObject { get; set; }
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+#pragma warning disable IDE1006 // Naming Styles
     private const BindingFlags bindingFlags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
+#pragma warning restore IDE1006 // Naming Styles
 
     internal static object WrapObjectIfNeeded(object o)
     {
         // Don't wrap primitive types, which don't have many interesting internal APIs
         if (o == null || o.GetType().IsPrimitive || o is string)
+#pragma warning disable CS8603 // Possible null reference return.
             return o;
+#pragma warning restore CS8603 // Possible null reference return.
 
         return new PrivateReflectionDynamicObject() { RealObject = o };
     }
@@ -86,7 +102,9 @@ class PrivateReflectionDynamicObject : DynamicObject
         IProperty prop = GetProperty(binder.Name);
 
         // Get the property value
+#pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
         result = prop.GetValue(RealObject, index: null);
+#pragma warning restore CS8625 // Cannot convert null literal to non-nullable reference type.
 
         // Wrap the sub object if necessary. This allows nested anonymous objects to work.
         result = WrapObjectIfNeeded(result);
@@ -94,12 +112,16 @@ class PrivateReflectionDynamicObject : DynamicObject
         return true;
     }
 
+#pragma warning disable CS8765 // Nullability of type of parameter doesn't match overridden member (possibly because of nullability attributes).
     public override bool TrySetMember(SetMemberBinder binder, object value)
+#pragma warning restore CS8765 // Nullability of type of parameter doesn't match overridden member (possibly because of nullability attributes).
     {
         IProperty prop = GetProperty(binder.Name);
 
         // Set the property value
+#pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
         prop.SetValue(RealObject, value, index: null);
+#pragma warning restore CS8625 // Cannot convert null literal to non-nullable reference type.
 
         return true;
     }
@@ -116,7 +138,9 @@ class PrivateReflectionDynamicObject : DynamicObject
         return true;
     }
 
+#pragma warning disable CS8765 // Nullability of type of parameter doesn't match overridden member (possibly because of nullability attributes).
     public override bool TrySetIndex(SetIndexBinder binder, object[] indexes, object value)
+#pragma warning restore CS8765 // Nullability of type of parameter doesn't match overridden member (possibly because of nullability attributes).
     {
         // The indexed property is always named "Item" in C#
         IProperty prop = GetIndexProperty();
@@ -125,7 +149,9 @@ class PrivateReflectionDynamicObject : DynamicObject
     }
 
     // Called when a method is called
+#pragma warning disable CS8610 // Nullability of reference types in type of parameter doesn't match overridden member.
     public override bool TryInvokeMember(InvokeMemberBinder binder, object[] args, out object result)
+#pragma warning restore CS8610 // Nullability of reference types in type of parameter doesn't match overridden member.
     {
         result = InvokeMemberOnType(RealObject.GetType(), RealObject, binder.Name, args);
 
@@ -143,7 +169,9 @@ class PrivateReflectionDynamicObject : DynamicObject
 
     public override string ToString()
     {
+#pragma warning disable CS8603 // Possible null reference return.
         return RealObject.ToString();
+#pragma warning restore CS8603 // Possible null reference return.
     }
 
     private IProperty GetIndexProperty()
@@ -158,11 +186,15 @@ class PrivateReflectionDynamicObject : DynamicObject
         IDictionary<string, IProperty> typeProperties = GetTypeProperties(RealObject.GetType());
 
         // Look for the one we want
+#pragma warning disable IDE0018 // Inline variable declaration
         IProperty property;
+#pragma warning restore IDE0018 // Inline variable declaration
+#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
         if (typeProperties.TryGetValue(propertyName, out property))
         {
             return property;
         }
+#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
 
         // The property doesn't exist
 
@@ -178,11 +210,15 @@ class PrivateReflectionDynamicObject : DynamicObject
     private static IDictionary<string, IProperty> GetTypeProperties(Type type)
     {
         // First, check if we already have it cached
+#pragma warning disable IDE0018 // Inline variable declaration
         IDictionary<string, IProperty> typeProperties;
+#pragma warning restore IDE0018 // Inline variable declaration
+#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
         if (_propertiesOnType.TryGetValue(type, out typeProperties))
         {
             return typeProperties;
         }
+#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
 
         // Not cache, so we need to build it
 
@@ -220,12 +256,14 @@ class PrivateReflectionDynamicObject : DynamicObject
         try
         {
             // Try to incoke the method
+#pragma warning disable CS8603 // Possible null reference return.
             return type.InvokeMember(
                 name,
                 BindingFlags.InvokeMethod | bindingFlags,
                 null,
                 target,
                 args);
+#pragma warning restore CS8603 // Possible null reference return.
         }
         catch (MissingMethodException)
         {
@@ -235,7 +273,9 @@ class PrivateReflectionDynamicObject : DynamicObject
                 return InvokeMemberOnType(type.BaseType, target, name, args);
             }
             //quick greg hack to allow methods to not exist!
+#pragma warning disable CS8603 // Possible null reference return.
             return null;
+#pragma warning restore CS8603 // Possible null reference return.
         }
     }
 }
