@@ -9,6 +9,7 @@ namespace Featurize.Repositories;
 /// </summary>
 public sealed class RepositoryProviderFeature :
     IFeatureWithOptions<RepositoryProviderFeature, RepositoryProviderOptions>,
+    IFeatureWithConfigurableOptions<RepositoryProviderOptions>,
     IServiceCollectionFeature
 {
     private RepositoryProviderFeature(RepositoryProviderOptions options)

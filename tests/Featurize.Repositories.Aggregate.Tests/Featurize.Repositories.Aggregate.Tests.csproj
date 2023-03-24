@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
@@ -26,6 +26,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\src\Featurize.Repositories.Aggregates\Featurize.Repositories.Aggregates.csproj" />
+    <ProjectReference Include="..\..\src\Featurize.Repositories.InMemory\Featurize.Repositories.InMemory.csproj" />
     <ProjectReference Include="..\..\src\Featurize.Repositories.MongoDB\Featurize.Repositories.MongoDB.csproj" />
   </ItemGroup>
 
