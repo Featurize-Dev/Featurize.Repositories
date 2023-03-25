@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Featurize.Repositories.Aggregates.Publsher;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Featurize.Repositories.Aggregates;
 internal class AggregateRepositoryProvider : IRepositoryProvider
@@ -7,10 +8,11 @@ internal class AggregateRepositoryProvider : IRepositoryProvider
 
     public string Name => DefaultName;
 
-    public bool IsConfigured => true;
+    public bool IsConfigured { get; }
 
     public void ConfigureProvider(IServiceCollection services)
     {
+        services.AddScoped<IEventPublisher, SimpleEventPublisher>();
     }
 
     public void ConfigureRepository(IServiceCollection services, RepositoryInfo info)
