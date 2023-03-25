@@ -4,7 +4,7 @@ namespace Featurize.Repositories.Aggregates.Publsher;
 
 public interface IEventPublisher
 {
-    void Publish(IEvent e);
+    Task Publish(IEvent e);
 }
 
 public interface IEventHandler<TEvent>
@@ -22,7 +22,7 @@ public class SimpleEventPublisher : IEventPublisher
         _provider = provider;
     }
 
-    public async void Publish(IEvent e)
+    public async Task Publish(IEvent e)
     {
         var handlerType = typeof(IEventHandler<>).MakeGenericType(e.GetType());
         var methodInfo = handlerType.GetMethod("Handle")!;

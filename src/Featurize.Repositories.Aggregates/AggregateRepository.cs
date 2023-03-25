@@ -36,7 +36,7 @@ public class AggregateRepository<T, TId> : IRepository<T, TId>
         {
             await _storage.SaveAsync(e);
             if(e.Payload is { })
-                _publisher.Publish(e.Payload);
+                await _publisher.Publish(e.Payload);
         }
     }
 

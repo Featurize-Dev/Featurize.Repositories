@@ -24,17 +24,18 @@ public class AddAggregate_With_Mongo
         var services = new ServiceCollection();
         var features = new FeatureCollection();
 
-
-        // required. driver will block IEvent because considered unsafe.
-        var objectSerializer = new ObjectSerializer(type => ObjectSerializer.DefaultAllowedTypes(type) || type.IsAssignableTo(typeof(IEvent)));
-        BsonSerializer.RegisterSerializer(objectSerializer);
-
         features.AddRepositories(x => {
-            x.AddMongo(_runner.ConnectionString);
+            x.AddMongo(x =>
+            {
+                x.ConnectionString = _runner.ConnectionString;
+                // Required otherwise Mongo will block IEvent
+                x.AllowedTypes = (type) => ObjectSerializer.DefaultAllowedTypes(type) || type.IsAssignableTo(typeof(IEvent));
+
+            });
             //x.AddMongo("mongodb://username:password@localhost:27017");
             x.AddAggregate<TestAggregate, Guid>(x =>
             {
-                x.Provider("MongoDB");
+                x.Provider(MongoRepositoryProvider.DefaultName);
                 x.Database("Test");
                 x.CollectionName("Test");
             });

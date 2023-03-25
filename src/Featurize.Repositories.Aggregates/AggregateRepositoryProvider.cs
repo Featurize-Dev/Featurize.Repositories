@@ -17,6 +17,8 @@ internal class AggregateRepositoryProvider : IRepositoryProvider
 
     public void ConfigureRepository(IServiceCollection services, RepositoryInfo info)
     {
+
+
         var implType = typeof(AggregateRepository<,>).MakeGenericType(info.EntityType, info.IdType);
         var serviceType = typeof(IRepository<,>).MakeGenericType(info.EntityType, info.IdType);
 
