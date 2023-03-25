@@ -1,13 +1,18 @@
-﻿namespace Featurize.Repositories.Aggregates;
+﻿using Featurize.Repositories.Aggregates.Publsher;
+
+namespace Featurize.Repositories.Aggregates;
 
 public class AggregateRepository<T, TId> : IRepository<T, TId>
     where T : class, IAggregate<T, TId>
     where TId : struct, IComparable<TId>
 {
     private readonly IEntityRepository<Event<T, TId>, TId> _storage;
-    public AggregateRepository(IEntityRepository<Event<T, TId>, TId> storage)
+    private readonly IEventPublisher _publisher;
+
+    public AggregateRepository(IEntityRepository<Event<T, TId>, TId> storage, IEventPublisher publisher)
     {
         _storage = storage;
+        _publisher = publisher;
     }
 
     public async ValueTask<T?> FindByIdAsync(TId id)
@@ -30,6 +35,8 @@ public class AggregateRepository<T, TId> : IRepository<T, TId>
         foreach(var e in entity.GetUncommittedChanges())
         {
             await _storage.SaveAsync(e);
+            if(e.Payload is { })
+                await _publisher.Publish(e.Payload);
         }
     }
 

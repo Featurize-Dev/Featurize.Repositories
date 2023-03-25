@@ -1,4 +1,7 @@
-﻿namespace Featurize.Repositories.MongoDB;
+﻿using MongoDB.Driver.Core.Configuration;
+using System.Xml.Linq;
+
+namespace Featurize.Repositories.MongoDB;
 
 /// <summary>
 /// 
@@ -22,9 +25,24 @@ public static class MongoRepositoryOptionsExtensions
     /// <param name="name">The name.</param>
     /// <returns></returns>
     public static RepositoryProviderOptions AddMongo(this RepositoryProviderOptions options, string connectionString, string name)
+        => options.AddMongo(x =>
+        {
+            x.Name = name;
+            x.ConnectionString = connectionString;
+        });
+
+    /// <summary>
+    /// Adds the MongoDB Repository Provider
+    /// </summary>
+    /// <param name="o"></param>
+    /// <param name="options"></param>
+    /// <returns></returns>
+    public static RepositoryProviderOptions AddMongo(this RepositoryProviderOptions o, Action<MongoProviderOptions> options)
     {
-        options.Providers.Add(new MongoRepositoryProvider(connectionString, name));
-        return options;
+        var opt = new MongoProviderOptions();
+        options.Invoke(opt);
+        o.Providers.Add(new MongoRepositoryProvider(opt));
+        return o;
     }
 
     /// <summary>

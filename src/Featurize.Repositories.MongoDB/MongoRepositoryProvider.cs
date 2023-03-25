@@ -13,18 +13,10 @@ public sealed class MongoRepositoryProvider : IRepositoryProvider
     /// <summary>
     /// Initializes a new instance of the <see cref="MongoRepositoryProvider"/> class.
     /// </summary>
-    /// <param name="connectionString">The connection string.</param>
-    public MongoRepositoryProvider(string connectionString) 
-        : this(connectionString, DefaultName) { }
-    /// <summary>
-    /// Initializes a new instance of the <see cref="MongoRepositoryProvider"/> class.
-    /// </summary>
-    /// <param name="connectionString">The connection string.</param>
-    /// <param name="name">The name.</param>
-    public MongoRepositoryProvider(string connectionString, string name)
+    public MongoRepositoryProvider(MongoProviderOptions options)
 	{
-        Name = name;
-        ConnectionString = connectionString;
+        Name= options.Name;
+        Options = options;
     }
     /// <summary>
     /// Gets the default name.
@@ -33,14 +25,7 @@ public sealed class MongoRepositoryProvider : IRepositoryProvider
     /// The default name.
     /// </value>
     public static string DefaultName => "MongoDB";
-
-    /// <summary>
-    /// Gets the connection string.
-    /// </summary>
-    /// <value>
-    /// The connection string.
-    /// </value>
-    public string ConnectionString { get; }
+        
     /// <summary>
     /// </summary>
     public string Name { get; }
@@ -49,12 +34,28 @@ public sealed class MongoRepositoryProvider : IRepositoryProvider
     public bool IsConfigured { get; }
 
     /// <summary>
+    /// Options for this provider instance
+    /// </summary>
+    public MongoProviderOptions Options { get; }
+
+    /// <summary>
     /// Configures services required for this provider.
     /// </summary>
     /// <param name="services">The service collection <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection" />.</param>
     public void ConfigureProvider(IServiceCollection services)
     {
-        services.AddSingleton<IMongoClient>(x => new MongoClient(ConnectionString));
+        try
+        {
+            var objectSerializer = new ObjectSerializer(Options.AllowedTypes);
+            BsonSerializer.TryRegisterSerializer(objectSerializer);
+
+            foreach (var serializer in Options.Serializers)
+                BsonSerializer.TryRegisterSerializer(serializer);
+
+            foreach (var type in Options.ClassMaps)
+                BsonClassMap.LookupClassMap(type);
+        } catch { }
+        //services.AddSingleton<IMongoClient>(x => new MongoClient(Options.ConnectionString));
     }
     /// <summary>
     /// Configures the services for the repository.
@@ -67,7 +68,7 @@ public sealed class MongoRepositoryProvider : IRepositoryProvider
         
         services.AddTransient(collectionType, c =>
         {
-            var client = c.GetRequiredService<IMongoClient>();
+            var client = new MongoClient(Options.ConnectionString);
             var database = client.GetDatabase(GetDatabase(info.Options));
             var type = database.GetType();
             var method = type.GetMethod(nameof(database.GetCollection))?.MakeGenericMethod(info.EntityType);

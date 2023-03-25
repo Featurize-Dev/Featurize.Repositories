@@ -7,7 +7,7 @@ public static class RepositoryProviderOptionsExtensions
         where TAggregate : class, IAggregate<TAggregate, TId> 
         where TId : struct
     {
-        if(!options.Providers.OfType<AggregateRepositoryProvider>().Any())
+        if (!options.Providers.OfType<AggregateRepositoryProvider>().Any())
         {
             options.Providers.Add(new AggregateRepositoryProvider());
         }
