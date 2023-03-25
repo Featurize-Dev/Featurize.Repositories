@@ -28,12 +28,12 @@ public class MongoProviderOptions
     public Func<Type, bool> AllowedTypes { get; set; } = ObjectSerializer.DefaultAllowedTypes;
 
     /// <summary>
-    /// Custom serializers to register
+    /// List of Serializer Providers for your custom types.
     /// </summary>
-    public List<IBsonSerializer<object>> Serializers { get; set; } = new List<IBsonSerializer<object>>();
+    public List<IBsonSerializationProvider> SerializationProviders { get; set; } = new();
 
     /// <summary>
-    /// Types to use for LookupClassMap
+    /// Types to use for LookupClassMap.
     /// </summary>
     public IEnumerable<Type> ClassMaps { get; set; } = Array.Empty<Type>();
 

@@ -48,14 +48,15 @@ public sealed class MongoRepositoryProvider : IRepositoryProvider
         {
             var objectSerializer = new ObjectSerializer(Options.AllowedTypes);
             BsonSerializer.TryRegisterSerializer(objectSerializer);
+        }
+        catch { }
 
-            foreach (var serializer in Options.Serializers)
-                BsonSerializer.TryRegisterSerializer(serializer);
+        foreach (var provider in Options.SerializationProviders)
+                BsonSerializer.RegisterSerializationProvider(provider);
 
             foreach (var type in Options.ClassMaps)
                 BsonClassMap.LookupClassMap(type);
-        } catch { }
-        //services.AddSingleton<IMongoClient>(x => new MongoClient(Options.ConnectionString));
+       
     }
     /// <summary>
     /// Configures the services for the repository.
