@@ -15,8 +15,12 @@ public static class RepositoryProviderOptionsExtensions
         options.AddRepository<Event<TAggregate, TId>, Guid>(x => config?.Invoke(x));
         options.AddRepository<TAggregate, TId>(x =>
         {
+            config?.Invoke(x);
             var provider = x.GetProviderName();
+            var projector = x.GetProjectorType();
+            
             x.SetBaseProvider(provider);
+            
             x.Provider(AggregateRepositoryProvider.DefaultName);
         });
         
