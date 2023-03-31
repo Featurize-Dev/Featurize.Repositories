@@ -1,10 +1,5 @@
 ﻿using Featurize.Repositories.Aggregates;
 using FluentAssertions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Aggregate;
 
@@ -109,7 +104,7 @@ public class AggregateRoot_Tests
 
             for (int i = 0; i < newEvents; i++)
             {
-                aggregate.ApplyEvent(new TestEvent());
+                aggregate.RecordEvent(new TestEvent());
             }
 
             aggregate.Events.ExpectedVersion.Should().Be(aggregate.Events.Version + newEvents);
@@ -147,7 +142,7 @@ public class AggregateRoot_Tests
             var aggregateId = Guid.NewGuid();
             var aggregate = new TestAggregate(aggregateId);
 
-            aggregate.ApplyEvent(new TestEvent());
+            aggregate.RecordEvent(new TestEvent());
 
             aggregate.ApplyCalled.Should().BeTrue();
             aggregate.ApplyCalledTimes.Should().Be(1);

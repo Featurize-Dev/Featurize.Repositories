@@ -1,6 +1,4 @@
-﻿using System.Runtime.InteropServices;
-
-namespace Featurize.Repositories.Aggregates;
+﻿namespace Featurize.Repositories.Aggregates;
 
 internal class AggregateRepository<T, TId> : IRepository<T, TId>
     where T : class, IAggregate<T, TId>
