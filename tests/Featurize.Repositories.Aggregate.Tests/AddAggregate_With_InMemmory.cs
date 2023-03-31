@@ -47,7 +47,7 @@ public class AddAggregate_With_InMemory
         var b = await repo.FindByIdAsync(aggregateId);
 
         b.Should().NotBeNull();
-        b?.Events.Version.Should().Be(4);
+        b?.Version.Should().Be(4);
         b?.Name.Should().Be("Test2");
         b?.Id.Should().Be(aggregateId);
     }
