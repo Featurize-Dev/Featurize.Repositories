@@ -1,7 +1,11 @@
 ﻿namespace Featurize.Repositories.Aggregates;
 
+/// <summary>
+/// Marks a class/record as an event.
+/// </summary>
 public interface IEvent { };
-public class Event<TAggregate, TId> 
+
+internal class Event<TAggregate, TId> 
     : IIdentifiable<Event<TAggregate, TId>, Guid>
     where TId : struct
 { 

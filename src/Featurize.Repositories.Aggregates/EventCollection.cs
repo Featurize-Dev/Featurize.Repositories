@@ -12,10 +12,22 @@ public class EventCollection<TId> : IReadOnlyCollection<IEvent>, IEnumerable, IE
     private readonly List<IEvent> _events = new();
     private readonly List<IEvent> _uncomitted = new();
 
+    /// <summary>
+    /// The Id of the aggregate
+    /// </summary>
     public TId AggregateId { get; }
+    /// <summary>
+    /// The version of the aggregate
+    /// </summary>
     public int Version => _events.Count;
+    /// <summary>
+    /// The expected version after save.
+    /// </summary>
     public int ExpectedVersion => Version + _uncomitted.Count;
 
+    /// <summary>
+    /// The total number event comitted.
+    /// </summary>
     public int Count => _events.Count;
 
     /// <summary>
@@ -38,14 +50,30 @@ public class EventCollection<TId> : IReadOnlyCollection<IEvent>, IEnumerable, IE
         _events = events.ToList();
     }
 
+    /// <summary>
+    /// Append a event to the collection.
+    /// </summary>
+    /// <param name="e"></param>
     public void Append(IEvent e)
     {
         _uncomitted.Add(e);
     }
 
+    /// <summary>
+    /// Get the uncommitted events
+    /// </summary>
+    /// <returns>Events that are uncommitted.</returns>
     public IEnumerable<IEvent> GetUncommittedEvents() => _uncomitted;
 
+    /// <summary>
+    /// Iterates over the comitted events
+    /// </summary>
+    /// <returns>Events that are committed</returns>
     public IEnumerator<IEvent> GetEnumerator() => _events.GetEnumerator();
 
+    /// <summary>
+    /// Iterates over the comitted events
+    /// </summary>
+    /// <returns>Events that are committed</returns>
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 }
