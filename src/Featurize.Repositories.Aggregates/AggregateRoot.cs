@@ -5,20 +5,20 @@ public interface IAggregate<TSelf, TId> : IIdentifiable<TSelf, TId>
     where TId : struct
 {
     TId Id { get; }
-    EventCollection<TSelf, TId> Events { get; }
+    EventCollection<TId> Events { get; }
     static abstract TSelf Create(TId id);
-    void LoadFromHistory(EventCollection<TSelf, TId> events);
+    void LoadFromHistory(EventCollection<TId> events);
 }
 
 public abstract class AggregateRoot<TAggregate, TId>
     where TId : struct
 {
     public TId Id { get; private set; }
-    public EventCollection<TAggregate, TId> Events { get; private set; }
+    public EventCollection<TId> Events { get; private set; }
     protected AggregateRoot(TId id)
     {
         Id = id;
-        Events = new EventCollection<TAggregate, TId>(id);
+        Events = new EventCollection<TId>(id);
     }
 
     public void ApplyEvent(IEvent e)
@@ -40,7 +40,7 @@ public abstract class AggregateRoot<TAggregate, TId>
         this.AsDynamic().Apply(e);
     }
 
-    public void LoadFromHistory(EventCollection<TAggregate, TId> events)
+    public void LoadFromHistory(EventCollection<TId> events)
     {
         Events = events;
         foreach (var e in events)

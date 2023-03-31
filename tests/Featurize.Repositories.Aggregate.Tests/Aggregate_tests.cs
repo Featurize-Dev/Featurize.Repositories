@@ -59,7 +59,7 @@ public class AggregateRoot_Tests
             var aggregateId = Guid.NewGuid();
 
             var aggregate = new TestAggregate(aggregateId);
-            var events = new EventCollection<TestAggregate, Guid>(aggregateId, new[]
+            var events = new EventCollection<Guid>(aggregateId, new[]
             {
                 new TestEvent(),
                 new TestEvent(),
@@ -77,7 +77,7 @@ public class AggregateRoot_Tests
         public void should_be_same_as_version_when_no_new_events()
         {
             var aggregateId = Guid.NewGuid();
-            var events = new EventCollection<TestAggregate, Guid>(aggregateId, new[]
+            var events = new EventCollection<Guid>(aggregateId, new[]
             {
                 new TestEvent(),
                 new TestEvent(),
@@ -95,7 +95,7 @@ public class AggregateRoot_Tests
         public void should_increase_on_new_event()
         {
             var aggregateId = Guid.NewGuid();
-            var events = new EventCollection<TestAggregate, Guid>(aggregateId, new[]
+            var events = new EventCollection<Guid>(aggregateId, new[]
             {
                 new TestEvent(),
                 new TestEvent(),
@@ -126,7 +126,7 @@ public class AggregateRoot_Tests
 
 
             var aggregate = new TestAggregate(aggregateId);
-            var events = new EventCollection<TestAggregate, Guid>(aggregateId, new[]
+            var events = new EventCollection<Guid>(aggregateId, new[]
             {
                 new TestEvent(),
                 new TestEvent(),

@@ -2,7 +2,11 @@
 
 namespace Featurize.Repositories.Aggregates;
 
-public class EventCollection<TAggregate, TId> : IReadOnlyCollection<IEvent>, IEnumerable, IEnumerable<IEvent>
+/// <summary>
+/// A Append only EventCollection
+/// </summary>
+/// <typeparam name="TId">The Type of the aggregateId</typeparam>
+public class EventCollection<TId> : IReadOnlyCollection<IEvent>, IEnumerable, IEnumerable<IEvent>
     where TId : struct
 {
     private readonly List<IEvent> _events = new();
@@ -14,11 +18,20 @@ public class EventCollection<TAggregate, TId> : IReadOnlyCollection<IEvent>, IEn
 
     public int Count => _events.Count;
 
+    /// <summary>
+    /// Creates a new EventCollection for an AggregateId
+    /// </summary>
+    /// <param name="aggregateId"></param>
     public EventCollection(TId aggregateId)
     {
         AggregateId = aggregateId;
     }
 
+    /// <summary>
+    /// Creates a new Collections for an aggregate id with events
+    /// </summary>
+    /// <param name="aggregateId">The id Of the aggregate</param>
+    /// <param name="events">The events in this collection</param>
     public EventCollection(TId aggregateId, IEnumerable<IEvent> events)
     {
         AggregateId = aggregateId;
