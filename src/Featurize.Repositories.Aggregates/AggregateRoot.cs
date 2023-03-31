@@ -69,7 +69,7 @@ public abstract class AggregateRoot<TAggregate, TId>
 
     private void Apply(IEvent e)
     {
-        this.AsDynamic().When(e);
+        this.AsDynamic().Apply(e);
     }
     /// <inheritdoc />
     public void LoadFromHistory(EventCollection<TId> events)
