@@ -12,13 +12,13 @@ public class TestAggregate : AggregateRoot<TestAggregate, Guid>,
     public static TestAggregate Create(Guid id)
     {
         var aggregate = new TestAggregate(id);
-        aggregate.ApplyEvent(new ChangeNameEvent("Default Value"));
+        aggregate.RecordEvent(new ChangeNameEvent("Default Value"));
         return aggregate;
     }
 
     public void ChangeName(string name)
     {
-        ApplyEvent(new ChangeNameEvent(name));
+        RecordEvent(new ChangeNameEvent(name));
     }
 
     internal void Apply(ChangeNameEvent e)

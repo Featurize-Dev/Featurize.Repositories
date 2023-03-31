@@ -1,10 +1,5 @@
 ﻿using Featurize.Repositories.Aggregates;
 using FluentAssertions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Aggregate;
 
@@ -59,7 +54,7 @@ public class AggregateRoot_Tests
             var aggregateId = Guid.NewGuid();
 
             var aggregate = new TestAggregate(aggregateId);
-            var events = new EventCollection<TestAggregate, Guid>(aggregateId, new[]
+            var events = new EventCollection<Guid>(aggregateId, new[]
             {
                 new TestEvent(),
                 new TestEvent(),
@@ -77,7 +72,7 @@ public class AggregateRoot_Tests
         public void should_be_same_as_version_when_no_new_events()
         {
             var aggregateId = Guid.NewGuid();
-            var events = new EventCollection<TestAggregate, Guid>(aggregateId, new[]
+            var events = new EventCollection<Guid>(aggregateId, new[]
             {
                 new TestEvent(),
                 new TestEvent(),
@@ -95,7 +90,7 @@ public class AggregateRoot_Tests
         public void should_increase_on_new_event()
         {
             var aggregateId = Guid.NewGuid();
-            var events = new EventCollection<TestAggregate, Guid>(aggregateId, new[]
+            var events = new EventCollection<Guid>(aggregateId, new[]
             {
                 new TestEvent(),
                 new TestEvent(),
@@ -109,7 +104,7 @@ public class AggregateRoot_Tests
 
             for (int i = 0; i < newEvents; i++)
             {
-                aggregate.ApplyEvent(new TestEvent());
+                aggregate.RecordEvent(new TestEvent());
             }
 
             aggregate.Events.ExpectedVersion.Should().Be(aggregate.Events.Version + newEvents);
@@ -126,7 +121,7 @@ public class AggregateRoot_Tests
 
 
             var aggregate = new TestAggregate(aggregateId);
-            var events = new EventCollection<TestAggregate, Guid>(aggregateId, new[]
+            var events = new EventCollection<Guid>(aggregateId, new[]
             {
                 new TestEvent(),
                 new TestEvent(),
@@ -147,7 +142,7 @@ public class AggregateRoot_Tests
             var aggregateId = Guid.NewGuid();
             var aggregate = new TestAggregate(aggregateId);
 
-            aggregate.ApplyEvent(new TestEvent());
+            aggregate.RecordEvent(new TestEvent());
 
             aggregate.ApplyCalled.Should().BeTrue();
             aggregate.ApplyCalledTimes.Should().Be(1);

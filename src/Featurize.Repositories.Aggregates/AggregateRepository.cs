@@ -1,6 +1,4 @@
-﻿using System.Runtime.InteropServices;
-
-namespace Featurize.Repositories.Aggregates;
+﻿namespace Featurize.Repositories.Aggregates;
 
 internal class AggregateRepository<T, TId> : IRepository<T, TId>
     where T : class, IAggregate<T, TId>
@@ -25,7 +23,7 @@ internal class AggregateRepository<T, TId> : IRepository<T, TId>
         var aggregate = T.Create(id);
         if (events.Any())
         {
-            var eventCollection = new EventCollection<T, TId>(id, events);
+            var eventCollection = new EventCollection<TId>(id, events);
             aggregate.LoadFromHistory(eventCollection);
         }
         return aggregate;

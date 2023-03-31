@@ -1,21 +1,12 @@
 ﻿using Featurize.Repositories.Aggregates;
-using Featurize.Repositories.MongoDB;
 using Microsoft.Extensions.DependencyInjection;
-using EphemeralMongo;
-using Featurize.Repositories.InMemory;
 using FluentAssertions;
+using Moq;
 
 namespace Featurize.Repositories.Aggregate.Tests;
 public class MultiProviderTests
 {
-    private IMongoRunner _runner;
-
-    [SetUp]
-    public void Setup()
-    {
-        _runner = MongoRunner.Run();
-    }
-
+    
     public class MongoAggregate : AggregateRoot<MongoAggregate, Guid>, 
         IAggregate<MongoAggregate, Guid>
     {
@@ -57,20 +48,33 @@ public class MultiProviderTests
     {
         var services = new ServiceCollection();
         var features = new FeatureCollection();
+        var providerMock = new Mock<IRepositoryProvider>();
+        var providerMock1 = new Mock<IRepositoryProvider>();
+        var called1 = 0;
+        var called2 = 0;
 
+        providerMock.SetupGet(x => x.Name).Returns("Test");
+        providerMock.SetupGet(x => x.IsConfigured).Returns(true);
+        providerMock.Setup(x => x.ConfigureRepository(It.IsAny<IServiceCollection>(), It.IsAny<RepositoryInfo>()))
+            .Callback(() => called1++)
+            .Verifiable();
+
+        providerMock1.SetupGet(x => x.Name).Returns("Test1");
+        providerMock1.SetupGet(x => x.IsConfigured).Returns(true);
+        providerMock1.Setup(x => x.ConfigureRepository(It.IsAny<IServiceCollection>(), It.IsAny<RepositoryInfo>()))
+            .Callback(() => called2++)
+            .Verifiable();
 
         features.AddRepositories(x => {
-            x.AddProvider(new InMemoryRepositoryProvider());
-            x.AddMongo(_runner.ConnectionString);
+            x.AddProvider(providerMock.Object);
+            x.AddProvider(providerMock1.Object);
             x.AddAggregate<MongoAggregate, Guid>(x =>
             {
-                x.Provider(MongoRepositoryProvider.DefaultName);
-                x.Database("Test");
-                x.CollectionName("Test");
+                x.Provider("Test");
             });
             x.AddAggregate<MemmoryAggregate, Guid>(x =>
             {
-                x.Provider(InMemoryRepositoryProvider.DefaultName);
+                x.Provider("Test1");
             });
         });
 
@@ -81,20 +85,33 @@ public class MultiProviderTests
 
         var provider = services.BuildServiceProvider();
 
-        var repo1 = provider.GetRequiredService<IRepository<Event<MongoAggregate, Guid>, Guid>>();
-        var repo2 = provider.GetRequiredService<IRepository<Event<MemmoryAggregate, Guid>, Guid>>();
+        providerMock.Verify();
+        providerMock1.Verify();
+        called1.Should().Be(1);
+        called2.Should().Be(1);
 
-        var baseType1 = repo1.GetType();
-        var baseType2 = repo2.GetType();
-
-        baseType1.Should().Be(typeof(MongoEntityRepository<Event<MongoAggregate, Guid>, Guid>));
-        baseType2.Should().Be(typeof(InMemoryRepository<Event<MemmoryAggregate, Guid>, Guid>));
     }
 
-    [TearDown]
-    public void TearDown()
+}
+
+public class TestProvider : IRepositoryProvider
+{
+    public TestProvider(string name)
     {
-        _runner.Dispose();
+        Name = name;
+    }
+    public string Name { get; private set; }
+
+    public bool IsConfigured => true;
+
+    public void ConfigureProvider(IServiceCollection services)
+    {
+        
+    }
+
+    public void ConfigureRepository(IServiceCollection services, RepositoryInfo info)
+    {
+        
     }
 }
 

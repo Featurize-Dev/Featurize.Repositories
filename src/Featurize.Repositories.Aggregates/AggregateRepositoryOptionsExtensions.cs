@@ -1,5 +1,4 @@
-﻿using Featurize.Repositories.Aggregates;
-using Featurize.Repositories.DefaultProvider;
+﻿using Featurize.Repositories.DefaultProvider;
 
 namespace Featurize.Repositories;
 
