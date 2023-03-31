@@ -85,17 +85,17 @@ public sealed class MongoRepositoryProvider : IRepositoryProvider
 
     private static string GetDatabase(RepositoryOptions options)
     {
-        if (options.TryGetValue("Database", out string? value))
+        if (options.TryGetValue("Database", out object? value))
         {
-            return value;
+            return value as string ?? string.Empty;
         }
         return string.Empty;
     }
     private static string GetCollectionName(RepositoryOptions options)
     {
-        if (options.TryGetValue("CollectionName", out string? value))
+        if (options.TryGetValue("CollectionName", out object? value))
         {
-            return value;
+            return value as string ?? string.Empty;
         }
         return string.Empty;
     }

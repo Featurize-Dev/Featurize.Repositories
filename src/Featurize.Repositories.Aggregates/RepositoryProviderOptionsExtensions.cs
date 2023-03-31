@@ -17,7 +17,6 @@ public static class RepositoryProviderOptionsExtensions
         {
             config?.Invoke(x);
             var provider = x.GetProviderName();
-            var projector = x.GetProjectorType();
             
             x.SetBaseProvider(provider);
             

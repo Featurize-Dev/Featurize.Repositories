@@ -14,4 +14,15 @@ public class Event<TAggregate, TId>
     {
         return entity.Id;
     }
+
+
+    public static Event<TAggregate, TId> Create(TId aggregateId, int version, IEvent payLoad)
+    {
+        return new Event<TAggregate, TId>()
+        {
+            AggregateId = aggregateId,
+            Version = version,
+            Payload = payLoad,
+        };
+    }
 }

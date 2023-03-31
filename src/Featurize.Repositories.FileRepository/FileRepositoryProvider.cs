@@ -75,6 +75,11 @@ public class FileRepositoryProvider : IRepositoryProvider
 
     private static string GetDirectory(RepositoryOptions options)
     {
-        return options["Directory"];
+        if(options.TryGetValue("Directory", out object? value))
+        {
+            return value as string ?? string.Empty;
+        }
+
+        return string.Empty;
     }
 }

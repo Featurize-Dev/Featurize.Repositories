@@ -5,36 +5,20 @@ public interface IAggregate<TSelf, TId> : IIdentifiable<TSelf, TId>
     where TId : struct
 {
     TId Id { get; }
-    int Version { get; }
-    IEnumerable<Event<TSelf, TId>> GetUncommittedChanges();
-    void LoadFromHistory(IEnumerable<Event<TSelf, TId>> events);
+    EventCollection<TSelf, TId> Events { get; }
     static abstract TSelf Create(TId id);
+    void LoadFromHistory(EventCollection<TSelf, TId> events);
 }
 
 public abstract class AggregateRoot<TAggregate, TId>
-    where TId: struct
+    where TId : struct
 {
-    private readonly EventCollection<TAggregate, TId> _events = new();
     public TId Id { get; private set; }
-    public int Version { get; private set; }
-
-    public int ExpectedVersion { get; private set; }
-
-    protected AggregateRoot(TId id) { Id = id; Version = 0; }
-
-    public IEnumerable<Event<TAggregate, TId>> GetUncommittedChanges()
+    public EventCollection<TAggregate, TId> Events { get; private set; }
+    protected AggregateRoot(TId id)
     {
-        return _events;
-    }
-
-    public void LoadFromHistory(IEnumerable<Event<TAggregate, TId>> events)
-    {
-        foreach (var e in events)
-        {
-            Version = e.Version;
-            ApplyEvent(e, false);
-        }
-        ExpectedVersion = Version;
+        Id = id;
+        Events = new EventCollection<TAggregate, TId>(id);
     }
 
     public void ApplyEvent(IEvent e)
@@ -42,23 +26,26 @@ public abstract class AggregateRoot<TAggregate, TId>
         ArgumentNullException.ThrowIfNull(e, nameof(e));
         ArgumentNullException.ThrowIfNull(Id, nameof(Id));
 
-        ExpectedVersion += 1;
-        ApplyEvent(new Event<TAggregate, TId>
-        {
-            AggregateId = Id,
-            Version = ExpectedVersion,
-            Payload = e
-        }, true);
+        ApplyEvent(e, true);
     }
 
-    private void ApplyEvent(Event<TAggregate, TId> e, bool isNew)
+    private void ApplyEvent(IEvent e, bool isNew)
     {
         Apply(e);
-        if (isNew) _events.Append(e);
+        if (isNew) Events.Append(e);
     }
 
-    private void Apply(Event<TAggregate, TId> e)
+    private void Apply(IEvent e)
     {
-        this.AsDynamic().Apply(e.Payload);
+        this.AsDynamic().Apply(e);
+    }
+
+    public void LoadFromHistory(EventCollection<TAggregate, TId> events)
+    {
+        Events = events;
+        foreach (var e in events)
+        {
+            ApplyEvent(e, false);
+        }
     }
 }

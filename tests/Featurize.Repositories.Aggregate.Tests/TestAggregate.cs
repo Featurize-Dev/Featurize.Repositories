@@ -1,9 +1,4 @@
 ﻿using Featurize.Repositories.Aggregates;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Featurize.Repositories.Aggregate.Tests;
 public record ChangeNameEvent(string Name) : IEvent;
@@ -16,7 +11,9 @@ public class TestAggregate : AggregateRoot<TestAggregate, Guid>,
 
     public static TestAggregate Create(Guid id)
     {
-        return new TestAggregate(id);
+        var aggregate = new TestAggregate(id);
+        aggregate.ApplyEvent(new ChangeNameEvent("Default Value"));
+        return aggregate;
     }
 
     public void ChangeName(string name)
@@ -24,7 +21,7 @@ public class TestAggregate : AggregateRoot<TestAggregate, Guid>,
         ApplyEvent(new ChangeNameEvent(name));
     }
 
-    private void Apply(ChangeNameEvent e)
+    internal void Apply(ChangeNameEvent e)
     {
         Name = e.Name;
     }
