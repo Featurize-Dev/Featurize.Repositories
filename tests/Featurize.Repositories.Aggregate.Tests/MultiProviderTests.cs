@@ -1,13 +1,6 @@
 ﻿using Featurize.Repositories.Aggregates;
 using Featurize.Repositories.MongoDB;
 using Microsoft.Extensions.DependencyInjection;
-using MongoDB.Bson.Serialization.Serializers;
-using MongoDB.Bson.Serialization;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using EphemeralMongo;
 using Featurize.Repositories.InMemory;
 using FluentAssertions;

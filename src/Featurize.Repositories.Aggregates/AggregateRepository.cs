@@ -1,30 +1,33 @@
-﻿using Featurize.Repositories.Aggregates.Publsher;
+﻿using System.Runtime.InteropServices;
 
 namespace Featurize.Repositories.Aggregates;
 
-public class AggregateRepository<T, TId> : IRepository<T, TId>
+internal class AggregateRepository<T, TId> : IRepository<T, TId>
     where T : class, IAggregate<T, TId>
     where TId : struct, IComparable<TId>
 {
     private readonly IEntityRepository<Event<T, TId>, TId> _storage;
-    private readonly IEventPublisher _publisher;
 
-    public AggregateRepository(IEntityRepository<Event<T, TId>, TId> storage, IEventPublisher publisher)
+    public AggregateRepository(IEntityRepository<Event<T, TId>, TId> storage)
     {
         _storage = storage;
-        _publisher = publisher;
     }
 
     public async ValueTask<T?> FindByIdAsync(TId id)
     {
         var events = await _storage
-            .Query
-            .Where(x => x.AggregateId.Equals(id))
-            .OrderBy(x => x.Version)
-            .ToListAsync();
+           .Query
+           .Where(x => x.AggregateId.Equals(id))
+           .OrderBy(x => x.Version)
+           .Select(x => x.Payload)
+           .ToArrayAsync();
 
         var aggregate = T.Create(id);
-        aggregate.LoadFromHistory(events);
+        if (events.Any())
+        {
+            var eventCollection = new EventCollection<T, TId>(id, events);
+            aggregate.LoadFromHistory(eventCollection);
+        }
         return aggregate;
     }
 
@@ -32,11 +35,11 @@ public class AggregateRepository<T, TId> : IRepository<T, TId>
     {
         //TODO: Check Version in database
 
-        foreach(var e in entity.GetUncommittedChanges())
+        var events = entity.Events.GetUncommittedEvents().ToList();
+        foreach (var e in events)
         {
-            await _storage.SaveAsync(e);
-            if(e.Payload is { })
-                await _publisher.Publish(e.Payload);
+            var version = entity.Events.Version + events.IndexOf(e);
+            await _storage.SaveAsync(Event<T, TId>.Create(entity.Id, version, e));
         }
     }
 

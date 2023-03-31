@@ -3,7 +3,7 @@
 /// <summary>
 /// Generic options collection
 /// </summary>
-public class RepositoryOptions : Dictionary<string, string>
+public class RepositoryOptions : Dictionary<string, object>
 {
     /// <summary>
     /// Sets the name of the <see cref="IRepositoryProvider" /> registerd in the <see cref="ProviderCollection"/>
@@ -20,8 +20,9 @@ public class RepositoryOptions : Dictionary<string, string>
     /// <returns></returns>
     public string GetProviderName()
     {
-        if(TryGetValue(nameof(Provider), out string? value)) {
-            return value;
+        if(TryGetValue(nameof(Provider), out object? value)) 
+        {
+            return value as string ?? string.Empty;
         }
 
         return string.Empty;
