@@ -13,10 +13,15 @@ public interface IAggregate<TSelf, TId> : IIdentifiable<TSelf, TId>
     /// The Identifier of the AggregateRoot
     /// </summary>
     TId Id { get; }
+
     /// <summary>
-    /// The EventCollection for this aggregate
+    /// The verion of the aggregate.
     /// </summary>
-    EventCollection<TId> Events { get; }
+    int Version { get; }
+    /// <summary>
+    /// The expected version of the aggregate after the save.
+    /// </summary>
+    int ExpectedVersion { get; }
     /// <summary>
     /// Factory method to create a new Aggregate.
     /// </summary>
@@ -29,6 +34,11 @@ public interface IAggregate<TSelf, TId> : IIdentifiable<TSelf, TId>
     /// </summary>
     /// <param name="events"></param>
     void LoadFromHistory(EventCollection<TId> events);
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    EventCollection<TId> GetUncommittedEvents();
 }
 
 /// <summary>
@@ -39,15 +49,19 @@ public interface IAggregate<TSelf, TId> : IIdentifiable<TSelf, TId>
 public abstract class AggregateRoot<TAggregate, TId>
     where TId : struct
 {
+    private EventCollection<TId> _events;
+
     /// <inheritdoc />
     public TId Id { get; private set; }
     /// <inheritdoc />
-    public EventCollection<TId> Events { get; private set; }
+    public int Version => _events.Version;
+    /// <inheritdoc />
+    public int ExpectedVersion => _events.ExpectedVersion;
     /// <inheritdoc />
     protected AggregateRoot(TId id)
     {
         Id = id;
-        Events = new EventCollection<TId>(id);
+        _events = new EventCollection<TId>(id);
     }
     /// <summary>
     /// Applies a new event to the EventCollection.
@@ -64,7 +78,7 @@ public abstract class AggregateRoot<TAggregate, TId>
     private void RecordEvent(IEvent e, bool isNew)
     {
         Apply(e);
-        if (isNew) Events.Append(e);
+        if (isNew) _events.Append(e);
     }
 
     private void Apply(IEvent e)
@@ -74,10 +88,12 @@ public abstract class AggregateRoot<TAggregate, TId>
     /// <inheritdoc />
     public void LoadFromHistory(EventCollection<TId> events)
     {
-        Events = events;
+        _events = events;
         foreach (var e in events)
         {
             RecordEvent(e, false);
         }
     }
+    /// <inheritdoc />
+    public EventCollection<TId> GetUncommittedEvents() => new(Id, _events.GetUncommittedEvents());
 }

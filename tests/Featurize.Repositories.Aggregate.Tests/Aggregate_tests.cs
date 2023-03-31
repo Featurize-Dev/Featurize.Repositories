@@ -45,7 +45,7 @@ public class AggregateRoot_Tests
 
             var aggregate = new TestAggregate(guid);
 
-            aggregate.Events.Version.Should().Be(0);
+            aggregate.Version.Should().Be(0);
         }
 
         [Test]
@@ -62,7 +62,7 @@ public class AggregateRoot_Tests
             });
             aggregate.LoadFromHistory(events);
 
-            aggregate.Events.Version.Should().Be(3);
+            aggregate.Version.Should().Be(3);
         }
     }
 
@@ -82,7 +82,7 @@ public class AggregateRoot_Tests
             var aggregate = new TestAggregate(aggregateId);
             aggregate.LoadFromHistory(events);
 
-            aggregate.Events.ExpectedVersion.Should().Be(aggregate.Events.Version);
+            aggregate.ExpectedVersion.Should().Be(aggregate.Version);
 
         }
 
@@ -107,7 +107,7 @@ public class AggregateRoot_Tests
                 aggregate.RecordEvent(new TestEvent());
             }
 
-            aggregate.Events.ExpectedVersion.Should().Be(aggregate.Events.Version + newEvents);
+            aggregate.ExpectedVersion.Should().Be(aggregate.Version + newEvents);
 
         }
     }

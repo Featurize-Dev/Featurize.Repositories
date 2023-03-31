@@ -63,7 +63,7 @@ public class AddAggregate_With_Mongo
         var b = await repo.FindByIdAsync(aggregateId);
 
         b.Should().NotBeNull();
-        b?.Events.Version.Should().Be(4);
+        b?.Version.Should().Be(4);
         b?.Name.Should().Be("Test2");
         b?.Id.Should().Be(aggregateId);
     }
@@ -103,8 +103,8 @@ public class AddAggregate_With_Mongo
         var aggregate = await repo.FindByIdAsync(Guid.NewGuid());
 
         aggregate.Should().NotBeNull();
-        aggregate.Events.Version.Should().Be(0);
-        aggregate.Events.ExpectedVersion.Should().Be(1);
+        aggregate.Version.Should().Be(0);
+        aggregate.ExpectedVersion.Should().Be(1);
     }
 
     [TearDown]

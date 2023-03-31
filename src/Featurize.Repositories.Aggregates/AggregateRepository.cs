@@ -32,11 +32,10 @@ internal class AggregateRepository<T, TId> : IRepository<T, TId>
     public async ValueTask SaveAsync(T entity)
     {
         //TODO: Check Version in database
-
-        var events = entity.Events.GetUncommittedEvents().ToList();
-        foreach (var e in events)
+        var version = entity.Version;
+        foreach (var e in entity.GetUncommittedEvents())
         {
-            var version = entity.Events.Version + events.IndexOf(e);
+            version++;           
             await _storage.SaveAsync(Event<T, TId>.Create(entity.Id, version, e));
         }
     }
