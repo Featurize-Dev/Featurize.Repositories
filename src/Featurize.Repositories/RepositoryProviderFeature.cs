@@ -61,4 +61,13 @@ public sealed class RepositoryProviderFeature :
             provider.ConfigureRepository(services, info);
         }
     }
+
+    /// <summary>
+    /// Configures the child Features
+    /// </summary>
+    /// <param name="features"></param>
+    public void Configure(IFeatureCollection features)
+    {
+        features.Configure(Options);
+    }
 }
