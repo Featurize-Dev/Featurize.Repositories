@@ -9,8 +9,9 @@ public static class RepositoryProviderOptionsExtentions
     /// </summary>
     /// <param name="options">The options.</param>
     /// <returns></returns>
-    public static RepositoryProviderOptions UseInMemory(this RepositoryProviderOptions options)
+    public static RepositoryProviderOptions AddInMemory(this RepositoryProviderOptions options)
     {
+        options.AddProvider(new InMemoryRepositoryProvider());
         return options;
     }
 
