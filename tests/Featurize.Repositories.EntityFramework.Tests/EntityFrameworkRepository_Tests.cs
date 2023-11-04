@@ -14,7 +14,7 @@ internal class EntityFrameworkRepository_Tests
         var services = new ServiceCollection();
         var provider = new EntityFrameworkRepositoryProvider(new EntityFrameworkRepositoryProviderOptions());
 
-        services.AddDbContext<TestContext>(x => x.UseInMemoryDatabase("test"));
+        services.AddDbContext<TestContext>(x => x.UseInMemoryDatabase("test"), contextLifetime: ServiceLifetime.Transient);
         
         provider.ConfigureProvider(services);
         provider.ConfigureRepository(services, new RepositoryInfo(typeof(TestEntity), typeof(Guid), new RepositoryOptions().UseContext<TestContext>()));
@@ -27,12 +27,13 @@ internal class EntityFrameworkRepository_Tests
     {
         var repo = _serviceProvider.GetRequiredService<IRepository<TestEntity, Guid>>();
         var context = _serviceProvider.GetRequiredService<TestContext>();
-        
+        var count = context.Entities.Count();
+
         var entity = new TestEntity {  Id = Guid.NewGuid() };
 
         await repo.SaveAsync(entity);
 
-        context.Entities.Should().HaveCount(1);
+        context.Entities.Should().HaveCount(count + 1);
     }
 
     [Test]
@@ -40,16 +41,17 @@ internal class EntityFrameworkRepository_Tests
     {
         var repo = _serviceProvider.GetRequiredService<IRepository<TestEntity, Guid>>();
         var context = _serviceProvider.GetRequiredService<TestContext>();
+        var count = context.Entities.Count();
 
         var entity = new TestEntity() { Id = Guid.NewGuid() };
 
         await repo.SaveAsync(entity);
 
-        context.Entities.Should().HaveCount(1);
+        context.Entities.Should().HaveCount(count + 1);
 
         await repo.DeleteAsync(entity.Id);
 
-        context.Entities.Should().HaveCount(0);
+        context.Entities.Should().HaveCount(count);
     }
 
     [Test]
@@ -57,11 +59,12 @@ internal class EntityFrameworkRepository_Tests
     {
         var repo = _serviceProvider.GetRequiredService<IRepository<TestEntity, Guid>>();
         var context = _serviceProvider.GetRequiredService<TestContext>();
+        var count = context.Entities.Count();
 
         var entity = new TestEntity() { Id = Guid.NewGuid() };
         await repo.SaveAsync(entity);
 
-        context.Entities.Should().HaveCount(1);
+        context.Entities.Should().HaveCount(count + 1);
 
         var result = await repo.FindByIdAsync(entity.Id);
 
