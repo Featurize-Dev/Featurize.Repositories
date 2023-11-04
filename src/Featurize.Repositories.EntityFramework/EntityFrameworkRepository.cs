@@ -31,7 +31,7 @@ public sealed class EntityFrameworkRepository<TContext, TEntity, TId> : IEntityR
     public TContext Context { get; }
 
     /// <inheritdoc />
-    public IQuery<TEntity> Query => throw new NotImplementedException();
+    public IQuery<TEntity> Query => new EntityFrameworkQuery<TEntity>(_collection.AsQueryable());
 
     /// <inheritdoc />
     public async ValueTask DeleteAsync(TId id)
@@ -39,7 +39,8 @@ public sealed class EntityFrameworkRepository<TContext, TEntity, TId> : IEntityR
         var result = await _collection.FindAsync(id);
         if(result != null) 
         { 
-            _collection.Remove(result);    
+            _collection.Remove(result);
+            Context.SaveChanges();
         }
     }
 
@@ -52,7 +53,11 @@ public sealed class EntityFrameworkRepository<TContext, TEntity, TId> : IEntityR
     /// <inheritdoc />
     public ValueTask SaveAsync(TEntity entity)
     {
-        _collection.Update(entity);
+        if (Context.Entry(entity).State == EntityState.Detached)
+            _collection.Add(entity);
+
+        Context.SaveChanges();
+        
         return ValueTask.CompletedTask;
     }
 }

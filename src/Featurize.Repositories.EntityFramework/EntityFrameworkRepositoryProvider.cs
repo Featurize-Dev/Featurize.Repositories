@@ -52,7 +52,7 @@ public class EntityFrameworkRepositoryProvider : IRepositoryProvider
 
     private static Type GetContextType(RepositoryOptions options)
     {
-        if(options.TryGetValue("context", out object? value))
+        if(options.TryGetValue("UseContext", out object? value))
         {
             return (Type)value;
         }
