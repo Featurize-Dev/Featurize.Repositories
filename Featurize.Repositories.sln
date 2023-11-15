@@ -8,6 +8,10 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{9CA42BD8-A0B5-4571-9530-F80B23395D53}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "props", "props", "{C524BF04-5A0D-43E2-A339-582A861933DB}"
+	ProjectSection(SolutionItems) = preProject
+		props\common.props = props\common.props
+		props\package.props = props\package.props
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Featurize.Repositories", "src\Featurize.Repositories\Featurize.Repositories.csproj", "{8B290637-497B-4FF1-AAA4-0726058ECE39}"
 EndProject
@@ -27,9 +31,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Featurize.Repositories.Aggr
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Featurize.Repositories.Aggregate.Tests", "tests\Featurize.Repositories.Aggregate.Tests\Featurize.Repositories.Aggregate.Tests.csproj", "{507A97BB-933E-4E3C-8DE9-8A1B8D2841B9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Featurize.Repositories.EntityFramework", "src\Featurize.Repositories.EntityFramework\Featurize.Repositories.EntityFramework.csproj", "{9DF09340-8161-475F-B6B2-72521530106F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Featurize.Repositories.EntityFramework", "src\Featurize.Repositories.EntityFramework\Featurize.Repositories.EntityFramework.csproj", "{9DF09340-8161-475F-B6B2-72521530106F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Featurize.Repositories.EntityFramework.Tests", "tests\Featurize.Repositories.EntityFramework.Tests\Featurize.Repositories.EntityFramework.Tests.csproj", "{32728508-78A7-452F-AB2B-4DB0590EF5DA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Featurize.Repositories.EntityFramework.Tests", "tests\Featurize.Repositories.EntityFramework.Tests\Featurize.Repositories.EntityFramework.Tests.csproj", "{32728508-78A7-452F-AB2B-4DB0590EF5DA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -8,7 +8,7 @@
     <PackageProjectUrl>https://github.com/Featurize-Dev/Featurize</PackageProjectUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <RepositoryType>git</RepositoryType>
-    <RepositoryUrl>https://github.com/Featurize-Dev/Featurize</RepositoryUrl>
+    <RepositoryUrl>https://github.com/Featurize-Dev/Featurize.Kafka</RepositoryUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 	<GenerateDocumentationFile>True</GenerateDocumentationFile>
 	<DebugType>portable</DebugType>
